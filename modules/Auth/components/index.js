@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import { Formik, Field } from "formik";
-import Button from 'components/Button';
+import Button from "components/Button";
 
 const Auth = ({ className, type, signUpRequest }) => {
   return (
@@ -8,14 +8,19 @@ const Auth = ({ className, type, signUpRequest }) => {
       <h2 className="heading">{type}</h2>
       <Formik
         initialValues={{ email: "", password: "", username: "" }}
-        onSubmit={(values) => {
+        onSubmit={values => {
           signUpRequest({ values, typeOfAuth: type });
         }}
       >
         {props => (
           <form onSubmit={props.handleSubmit} className="form">
             <Field name="username" placeholder="Enter your username" required />
-            <Field type="email" name="email" placeholder="Enter your email" required />
+            <Field
+              type="email"
+              name="email"
+              placeholder="Enter your email"
+              required
+            />
             <Field
               type="password"
               name="password"
