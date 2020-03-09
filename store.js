@@ -15,7 +15,7 @@ function configureStore(initialState = {}) {
   const sagaMiddleware = createSagaMiddleware();
   const store = createStore(
     combineReducers({
-      
+      auth: () => null
     }),
     initialState,
     bindMiddleware([sagaMiddleware])

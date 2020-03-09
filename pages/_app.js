@@ -3,9 +3,9 @@ import React from "react";
 import { Provider } from "react-redux";
 import withRedux from "next-redux-wrapper";
 import withReduxSaga from "next-redux-saga";
-
-import createStore from "../store";
 import PageLayout from "components/PageLayout";
+import '../styles.css'
+import createStore from "../store";
 
 class MyApp extends App {
   static async getInitialProps({ Component, ctx }) {
@@ -19,11 +19,11 @@ class MyApp extends App {
   }
 
   render() {
-    const { Component, pageProps, store } = this.props;
+    const { Component, pageProps, store, router } = this.props;
     return (
       <Provider store={store}>
         <PageLayout>
-          <Component {...pageProps} />
+          <Component {...pageProps} router={router} />
         </PageLayout>
       </Provider>
     );
