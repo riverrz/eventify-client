@@ -18,3 +18,10 @@ export const signUpError = payload => {
     payload
   };
 };
+
+export const logoutSuccess = payload => {
+  return {
+    type: actionTypes.LOGOUT_SUCCESS,
+    payload
+  };
+};

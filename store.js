@@ -1,7 +1,8 @@
 import { applyMiddleware, createStore, combineReducers } from "redux";
 import createSagaMiddleware from "redux-saga";
+import { clone } from "ramda";
 import AuthReducer from "modules/Auth/redux/reducer";
-
+import { saveState } from './storage';
 import rootSaga from "./saga";
 
 const bindMiddleware = middleware => {
@@ -23,6 +24,18 @@ function configureStore(initialState = {}) {
   );
 
   store.sagaTask = sagaMiddleware.run(rootSaga);
+
+  store.subscribe(() => {
+    const state = clone(store.getState());
+
+    saveState({
+      auth: {
+        data: {
+          token: state.auth.data.token
+        }
+      }
+    });
+  });
 
   return store;
 }

@@ -13,7 +13,7 @@ function* signupSaga({ payload }) {
       method: "POST",
       body: JSON.stringify(values)
     });
-    yield put(signUpSuccess(data.user));
+    yield put(signUpSuccess(data));
   } catch (error) {
     yield cogoToast.error(`Oops.. ${error.message}`);
     yield put(signUpError(error));
