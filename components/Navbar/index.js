@@ -1,7 +1,13 @@
 import Link from "components/Link";
 import styled from "styled-components";
+import { createStructuredSelector } from "reselect";
+import { bindActionCreators } from "redux";
+import { pick } from "ramda";
+import { connect } from "react-redux";
+import { makeSelectLoggedIn } from "modules/Auth/redux/selectors";
+import * as actions from "modules/Auth/redux/actions";
 
-const Navbar = ({ className }) => (
+const Navbar = ({ className, isLoggedIn, logoutSuccess }) => (
   <Nav className={className}>
     <ul className="nav-list">
       <Link activeClassName="nav-active" href="/">
@@ -9,11 +15,20 @@ const Navbar = ({ className }) => (
           <a>Home</a>
         </NavItem>
       </Link>
-      <Link activeClassName="nav-active" href="/join?type=register">
-        <NavItem>
-          <a>Join us</a>
-        </NavItem>
-      </Link>
+      {!isLoggedIn && (
+        <Link activeClassName="nav-active" href="/join?type=register">
+          <NavItem>
+            <a>Join us</a>
+          </NavItem>
+        </Link>
+      )}
+      {isLoggedIn && (
+        <Link href="/">
+          <NavItem onClick={() => logoutSuccess()}>
+            <a>Log out</a>
+          </NavItem>
+        </Link>
+      )}
     </ul>
     <h2 className="title">Eventify</h2>
   </Nav>
@@ -35,7 +50,7 @@ const NavItem = styled.li`
   }
 `;
 
-export default styled(Navbar)`
+const StyledNavbar = styled(Navbar)`
   display: flex;
   justify-content: space-between;
   width: 100%;
@@ -71,3 +86,12 @@ export default styled(Navbar)`
     }
   }
 `;
+
+const mapStateToProps = createStructuredSelector({
+  isLoggedIn: makeSelectLoggedIn()
+});
+
+const mapDispatchToProps = dispatch =>
+  bindActionCreators(pick(["logoutSuccess"], actions), dispatch);
+
+export default connect(mapStateToProps, mapDispatchToProps)(StyledNavbar);

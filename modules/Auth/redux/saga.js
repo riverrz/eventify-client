@@ -1,9 +1,10 @@
-import { takeLatest, put, call } from "redux-saga/effects";
-import { SIGNUP_REQUEST } from "modules/Auth/redux/constants";
+import { takeLatest, put, call, takeEvery } from "redux-saga/effects";
+import { SIGNUP_REQUEST, LOGOUT_SUCCESS } from "modules/Auth/redux/constants";
 import { signUpSuccess, signUpError } from "modules/Auth/redux/actions";
 
 import config from "config/env";
 import request from "lib/request";
+import cogoToast from "cogo-toast";
 
 function* signupSaga({ payload }) {
   try {
@@ -20,4 +21,11 @@ function* signupSaga({ payload }) {
   }
 }
 
-export default [takeLatest(SIGNUP_REQUEST, signupSaga)];
+function* logoutSuccess() {
+  yield cogoToast.success("You have been successfully logged out!");
+}
+
+export default [
+  takeLatest(SIGNUP_REQUEST, signupSaga),
+  takeEvery(LOGOUT_SUCCESS, logoutSuccess)
+];
