@@ -23,6 +23,13 @@ const Navbar = ({ className, isLoggedIn, logoutSuccess }) => (
         </Link>
       )}
       {isLoggedIn && (
+        <Link href="/dashboard">
+          <NavItem>
+            <a>Dashboard</a>
+          </NavItem>
+        </Link>
+      )}
+      {isLoggedIn && (
         <Link href="/">
           <NavItem onClick={() => logoutSuccess()}>
             <a>Log out</a>
@@ -36,6 +43,7 @@ const Navbar = ({ className, isLoggedIn, logoutSuccess }) => (
 
 const Nav = styled.nav`
   color: #111;
+  border-bottom: 1px solid #222;
 `;
 
 const NavItem = styled.li`
