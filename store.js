@@ -1,5 +1,6 @@
 import { applyMiddleware, createStore, combineReducers } from "redux";
 import createSagaMiddleware from "redux-saga";
+import AuthReducer from "modules/Auth/redux/reducer";
 
 import rootSaga from "./saga";
 
@@ -15,7 +16,7 @@ function configureStore(initialState = {}) {
   const sagaMiddleware = createSagaMiddleware();
   const store = createStore(
     combineReducers({
-      auth: () => null
+      auth: AuthReducer
     }),
     initialState,
     bindMiddleware([sagaMiddleware])

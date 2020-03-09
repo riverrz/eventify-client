@@ -1,14 +1,20 @@
 import { connect } from "react-redux";
-import { createStructuredSelector } from "reselect";
+import { path, ifElse, includes, __, identity, always, pick } from "ramda";
 import { bindActionCreators } from "redux";
+import Auth from "modules/Auth/components";
+import * as actions from 'modules/Auth/redux/actions';
 
-const Auth = props => {
-  const { router } = props;
-  return <div>Join us</div>;
+const AuthPage = props => {
+  const { router, signUpRequest } = props;
+  const type = ifElse(
+    includes(__, ["register", "login"]),
+    identity,
+    always("register")
+  )(path(["query", "type"], router));
+
+  return <Auth type={type} signUpRequest={signUpRequest} />;
 };
 
-const mapStateToProps = createStructuredSelector({});
+const mapDispatchToProps = dispatch => bindActionCreators(pick(['signUpRequest'], actions), dispatch);
 
-const mapDispatchToProps = dispatch => ({});
-
-export default connect(mapStateToProps, mapDispatchToProps)(Auth);
+export default connect(null, mapDispatchToProps)(AuthPage);
