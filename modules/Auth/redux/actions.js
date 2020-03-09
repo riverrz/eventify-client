@@ -25,3 +25,22 @@ export const logoutSuccess = payload => {
     payload
   };
 };
+
+export const fetchUserRequest = payload => {
+  return {
+    type: actionTypes.FETCH_USER_REQUEST,
+    payload
+  };
+};
+export const fetchUserSuccess = payload => {
+  return {
+    type: actionTypes.FETCH_USER_SUCCESS,
+    payload
+  };
+};
+export const fetchUserError = payload => {
+  return {
+    type: actionTypes.FETCH_USER_ERROR,
+    payload
+  };
+};

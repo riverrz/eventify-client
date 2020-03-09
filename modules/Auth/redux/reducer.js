@@ -36,6 +36,26 @@ export default function(state = initialState, { type, payload }) {
         draft.loading = false;
         draft.error = false;
         draft.data = Object.assign({}, initialState.data);
+        break;
+      }
+
+      case actionTypes.FETCH_USER_REQUEST: {
+        draft.loading = true;
+        draft.error = false;
+        draft.data.user = {};
+        break;
+      }
+      case actionTypes.FETCH_USER_SUCCESS: {
+        draft.loading = false;
+        draft.error = false;
+        draft.data.user = payload;
+        break;
+      }
+      case actionTypes.FETCH_USER_ERROR: {
+        draft.loading = false;
+        draft.error = true;
+        draft.data = Object.assign({}, initialState.data);
+        break;
       }
     }
   });

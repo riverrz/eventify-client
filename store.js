@@ -1,9 +1,11 @@
 import { applyMiddleware, createStore, combineReducers } from "redux";
 import createSagaMiddleware from "redux-saga";
-import { clone } from "ramda";
+import { clone, mergeDeepRight } from "ramda";
 import AuthReducer from "modules/Auth/redux/reducer";
-import { saveState } from './storage';
+import { loadState, saveState } from "./storage";
 import rootSaga from "./saga";
+
+const savedState = loadState() || {};
 
 const bindMiddleware = middleware => {
   if (process.env.NODE_ENV !== "production") {
@@ -19,7 +21,7 @@ function configureStore(initialState = {}) {
     combineReducers({
       auth: AuthReducer
     }),
-    initialState,
+    mergeDeepRight(initialState, savedState),
     bindMiddleware([sagaMiddleware])
   );
 

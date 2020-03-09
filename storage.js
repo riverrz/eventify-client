@@ -1,10 +1,14 @@
 export const loadState = () => {
-  const serializedState = localStorage.getItem("eventifyState");
-  if (!serializedState) {
+  try {
+    const serializedState = localStorage.getItem("eventifyState");
+    if (!serializedState) {
+      return null;
+    }
+    const state = JSON.parse(serializedState);
+    return state;
+  } catch (error) {
     return null;
   }
-  const state = JSON.parse(serializedState);
-  return state;
 };
 
 export const saveState = state => {

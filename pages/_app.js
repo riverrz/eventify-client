@@ -3,8 +3,10 @@ import React from "react";
 import { Provider } from "react-redux";
 import withRedux from "next-redux-wrapper";
 import withReduxSaga from "next-redux-saga";
+import { path } from "ramda";
 import PageLayout from "components/PageLayout";
-import '../styles.css'
+import { initAppState } from "modules/Global/redux/actions";
+import "../styles.css";
 import createStore from "../store";
 
 class MyApp extends App {
@@ -16,6 +18,11 @@ class MyApp extends App {
     }
 
     return { pageProps };
+  }
+
+  componentDidMount() {
+    const dispatch = path(["store", "dispatch"])(this.props);
+    dispatch(initAppState());
   }
 
   render() {
