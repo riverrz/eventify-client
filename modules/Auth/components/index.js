@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import Link from "components/Link";
 import { Formik, Field } from "formik";
 import Button from "components/Button";
 
@@ -31,18 +32,27 @@ const Auth = ({ className, type, signUpRequest }) => {
           </form>
         )}
       </Formik>
+      {type === "register" ? (
+        <Link href="/join/login">
+          <a>Already a member? Sign in!</a>
+        </Link>
+      ) : (
+        <Link href="/join/register">
+          <a>Don't have an account? Register here!</a>
+        </Link>
+      )}
     </main>
   );
 };
 
 export default styled(Auth)`
+  text-align: center;
   .heading {
-    text-align: center;
     text-transform: uppercase;
   }
   .form {
     width: 50%;
-    margin: auto;
+    margin: 2rem auto;
     text-align: center;
 
     input {

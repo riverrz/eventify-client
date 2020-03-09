@@ -16,7 +16,7 @@ const Navbar = ({ className, isLoggedIn, logoutSuccess }) => (
         </NavItem>
       </Link>
       {!isLoggedIn && (
-        <Link activeClassName="nav-active" href="/join?type=register">
+        <Link activeClassName="nav-active" href="/join/register">
           <NavItem>
             <a>Join us</a>
           </NavItem>
