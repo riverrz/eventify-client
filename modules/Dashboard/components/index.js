@@ -5,7 +5,7 @@ import Content from "components/Content";
 import AllEvents from "./AllEvents";
 import CreateEvent from "./CreateEvent";
 
-const tabs = ["All events", "Create an event"];
+const tabs = ["All events", "Create an event", "Invites"];
 
 const Dashboard = ({ className }) => {
   const [selectedTab, setSelectedTab] = useState(tabs[0]);
@@ -21,6 +21,9 @@ const Dashboard = ({ className }) => {
       </Content>
       <Content open={selectedTab === tabs[1]}>
         <CreateEvent />
+      </Content>
+      <Content open={selectedTab === tabs[2]}>
+        <AllEvents />
       </Content>
     </main>
   );

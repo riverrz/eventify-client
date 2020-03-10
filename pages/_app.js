@@ -7,6 +7,7 @@ import { path } from "ramda";
 import PageLayout from "components/PageLayout";
 import { initAppState } from "modules/Global/redux/actions";
 import "../styles.css";
+import "react-tagsinput/react-tagsinput.css";
 import createStore from "../store";
 
 class MyApp extends App {
