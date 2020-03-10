@@ -2,16 +2,10 @@ import { useEffect } from "react";
 import { connect } from "react-redux";
 import Router from "next/router";
 import { createStructuredSelector } from "reselect";
-import { pick } from "ramda";
-import { bindActionCreators } from "redux";
 import Dashboard from "modules/Dashboard/components";
-import {
-  makeSelectEvents,
-  makeSelectLoggedIn
-} from "modules/Auth/redux/selectors";
-import * as actions from "modules/Dashboard/redux/actions";
+import { makeSelectLoggedIn } from "modules/Auth/redux/selectors";
 
-const DashboardPage = ({ events, isLoggedIn, createEventRequest }) => {
+const DashboardPage = ({ isLoggedIn }) => {
   useEffect(() => {
     if (!isLoggedIn) {
       Router.push("/");
@@ -20,15 +14,11 @@ const DashboardPage = ({ events, isLoggedIn, createEventRequest }) => {
   if (!isLoggedIn) {
     return null;
   }
-  return <Dashboard events={events} createEventRequest={createEventRequest} />;
+  return <Dashboard />;
 };
 
 const mapStateToProps = createStructuredSelector({
-  events: makeSelectEvents(),
   isLoggedIn: makeSelectLoggedIn()
 });
 
-const mapDispatchToProps = dispatch =>
-  bindActionCreators(pick(['createEventRequest'], actions), dispatch);
-
-export default connect(mapStateToProps, mapDispatchToProps)(DashboardPage);
+export default connect(mapStateToProps)(DashboardPage);

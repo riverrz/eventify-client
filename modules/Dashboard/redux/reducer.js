@@ -5,6 +5,11 @@ const initialState = {
   createEvent: {
     loading: false,
     error: false
+  },
+  allEvents: {
+    loading: false,
+    error: false,
+    data: []
   }
 };
 
