@@ -11,7 +11,7 @@ import {
 } from "modules/Auth/redux/selectors";
 import * as actions from "modules/Dashboard/redux/actions";
 
-const DashboardPage = ({ events, isLoggedIn }) => {
+const DashboardPage = ({ events, isLoggedIn, createEventRequest }) => {
   useEffect(() => {
     if (!isLoggedIn) {
       Router.push("/");
@@ -20,7 +20,7 @@ const DashboardPage = ({ events, isLoggedIn }) => {
   if (!isLoggedIn) {
     return null;
   }
-  return <Dashboard events={events} />;
+  return <Dashboard events={events} createEventRequest={createEventRequest} />;
 };
 
 const mapStateToProps = createStructuredSelector({
@@ -29,6 +29,6 @@ const mapStateToProps = createStructuredSelector({
 });
 
 const mapDispatchToProps = dispatch =>
-  bindActionCreators(pick([], actions), dispatch);
+  bindActionCreators(pick(['createEventRequest'], actions), dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(DashboardPage);

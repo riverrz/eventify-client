@@ -6,7 +6,7 @@ import cogoToast from "cogo-toast";
 import Button from "components/Button";
 import { emailRegex } from "lib/validations/regex";
 
-const CreateEvent = ({ className }) => {
+const CreateEvent = ({ className, createEventRequest }) => {
   const validationErrorMessage = useCallback(
     () => cogoToast.error("Please enter a valid email"),
     []
@@ -21,10 +21,10 @@ const CreateEvent = ({ className }) => {
           totalParticipantsAllowed: 0,
           startTimeStamp: "",
           endTimeStamp: "",
-          emailsArr: []
+          emailArr: []
         }}
         onSubmit={values => {
-          console.log(values);
+          createEventRequest(values);
         }}
       >
         {props => (
@@ -59,7 +59,7 @@ const CreateEvent = ({ className }) => {
               name="endTimeStamp"
               required
             />
-            <Field name="emailsArr">
+            <Field name="emailArr">
               {({ field, form }) => (
                 <TagsInput
                   value={field.value}
@@ -69,7 +69,7 @@ const CreateEvent = ({ className }) => {
                     placeholder: "Enter participants' email addresses"
                   }}
                   onValidationReject={validationErrorMessage}
-                  onChange={x => form.setFieldValue("emailsArr", x)}
+                  onChange={x => form.setFieldValue("emailArr", x)}
                 />
               )}
             </Field>

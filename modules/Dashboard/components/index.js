@@ -7,7 +7,7 @@ import CreateEvent from "./CreateEvent";
 
 const tabs = ["All events", "Create an event", "Invites"];
 
-const Dashboard = ({ className }) => {
+const Dashboard = ({ className, createEventRequest }) => {
   const [selectedTab, setSelectedTab] = useState(tabs[0]);
   return (
     <main className={className}>
@@ -20,7 +20,7 @@ const Dashboard = ({ className }) => {
         <AllEvents />
       </Content>
       <Content open={selectedTab === tabs[1]}>
-        <CreateEvent />
+        <CreateEvent createEventRequest={createEventRequest} />
       </Content>
       <Content open={selectedTab === tabs[2]}>
         <AllEvents />
