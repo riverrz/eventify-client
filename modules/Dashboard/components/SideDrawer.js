@@ -1,18 +1,19 @@
 import styled from "styled-components";
+import Icon from 'react-icons-kit';
 
 const SideDrawer = ({ className, tabs, selectedTab, setSelectedTab }) => {
   return (
     <aside className={className}>
       <ul className="list">
-        {tabs.map(name => (
+        {tabs.map(({ title, icon }) => (
           <li
-            key={name}
-            onClick={() => setSelectedTab(name)}
+            key={title}
+            onClick={() => setSelectedTab(title)}
             className={`list-item ${
-              selectedTab === name ? "list-item-active" : ""
+              selectedTab === title ? "list-item-active" : ""
             }`}
           >
-            {name}
+            <Icon size={25} icon={icon} /> {title}
           </li>
         ))}
       </ul>
@@ -30,10 +31,9 @@ export default styled(SideDrawer)`
   .list {
     padding: 2rem 0;
     .list-item {
-      padding: 1rem 0;
+      padding: 1rem;
       margin: 2rem 0;
       font-size: 1.2rem;
-      text-align: center;
       cursor: pointer;
       transition: all 0.3s;
     }
