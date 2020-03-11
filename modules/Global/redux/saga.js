@@ -1,13 +1,18 @@
 import { takeLatest, call, put, select } from "redux-saga/effects";
+import { isEmpty } from "ramda";
 import cogoToast from "cogo-toast";
 import config from "config/env";
 import request from "lib/request";
-import { makeSelectAuthToken } from "modules/Auth/redux/selectors";
+import {
+  makeSelectAuthToken,
+  makeSelectUser
+} from "modules/Auth/redux/selectors";
 import {
   fetchUserRequest,
   fetchUserSuccess,
   fetchUserError
 } from "modules/Auth/redux/actions";
+import { fetchAllEventsRequest } from "modules/Dashboard/redux/actions";
 import { FETCH_USER_REQUEST } from "modules/Auth/redux/constants";
 import { INIT_APP_STATE } from "./constants";
 
@@ -24,8 +29,11 @@ function* fetchUserSaga({ payload }) {
 
 function* initAppStateSaga({ payload }) {
   const token = yield select(makeSelectAuthToken());
-  if (token) {
+  const user = yield select(makeSelectUser());
+  if (token && isEmpty(user)) {
     yield put(fetchUserRequest());
+  } else if (token) {
+    yield put(fetchAllEventsRequest());
   }
 }
 

@@ -35,7 +35,8 @@ function configureStore(initialState = {}) {
     saveState({
       auth: {
         data: {
-          token: state.auth.data.token
+          token: state.auth.data.token,
+          user: state.auth.data.user,
         }
       }
     });
