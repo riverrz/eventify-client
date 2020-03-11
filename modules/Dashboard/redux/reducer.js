@@ -34,15 +34,18 @@ export default function reducer(state = initialState, { type, payload }) {
       case actionTypes.FETCH_ALL_EVENTS_REQUEST: {
         draft.events.loading = true;
         draft.events.error = false;
+        break;
       }
       case actionTypes.FETCH_ALL_EVENTS_SUCCESS: {
         draft.events.loading = false;
         draft.events.error = false;
         draft.events.data = payload;
+        break;
       }
       case actionTypes.FETCH_ALL_EVENTS_ERROR: {
         draft.events.loading = false;
         draft.events.error = true;
+        break;
       }
     }
   });
