@@ -6,7 +6,7 @@ import Dashboard from "modules/Dashboard/components";
 import { makeSelectLoggedIn } from "modules/Auth/redux/selectors";
 import { makeSelectAllEvents } from "modules/Dashboard/redux/selectors";
 
-const DashboardPage = ({ isLoggedIn }) => {
+const DashboardPage = ({ isLoggedIn, allEvents }) => {
   useEffect(() => {
     if (!isLoggedIn) {
       Router.push("/");
@@ -15,7 +15,7 @@ const DashboardPage = ({ isLoggedIn }) => {
   if (!isLoggedIn) {
     return null;
   }
-  return <Dashboard />;
+  return <Dashboard allEvents={allEvents} />;
 };
 
 const mapStateToProps = createStructuredSelector({

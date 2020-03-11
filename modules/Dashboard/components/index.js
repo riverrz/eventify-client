@@ -7,7 +7,7 @@ import CreateEvent from "./CreateEvent";
 
 const tabs = ["All events", "Create an event", "Invites"];
 
-const Dashboard = ({ className }) => {
+const Dashboard = ({ className, allEvents }) => {
   const [selectedTab, setSelectedTab] = useState(tabs[0]);
   return (
     <main className={className}>
@@ -17,13 +17,13 @@ const Dashboard = ({ className }) => {
         setSelectedTab={setSelectedTab}
       />
       <Content open={selectedTab === tabs[0]}>
-        <AllEvents />
+        <AllEvents events={allEvents} />
       </Content>
       <Content open={selectedTab === tabs[1]}>
         <CreateEvent />
       </Content>
       <Content open={selectedTab === tabs[2]}>
-        <AllEvents />
+        <AllEvents events={allEvents} />
       </Content>
     </main>
   );
