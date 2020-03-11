@@ -1,6 +1,10 @@
 import { takeEvery, call, put, takeLatest } from "redux-saga/effects";
 import cogoToast from "cogo-toast";
-import * as actionTypes from "./constants";
+import { CREATE_EVENT_REQUEST, FETCH_ALL_EVENTS_REQUEST } from "./constants";
+import {
+  FETCH_USER_SUCCESS,
+  SIGNUP_SUCCESS
+} from "modules/Auth/redux/constants";
 import config from "config/env";
 import request from "lib/request";
 import {
@@ -31,11 +35,17 @@ function* fetchAllEventsSaga({ payload }) {
     const data = yield call(request, requestUrl);
     yield put(fetchAllEventsSuccess(data));
   } catch (error) {
+    cogoToast.error(
+      `Oops.. We were not able to find your latest events. Please try again later!`
+    );
     yield put(fetchAllEventsError(error));
   }
 }
 
 export default [
-  takeEvery(actionTypes.CREATE_EVENT_REQUEST, createEventSaga),
-  takeLatest(actionTypes.FETCH_ALL_EVENTS_REQUEST, fetchAllEventsSaga)
+  takeEvery(CREATE_EVENT_REQUEST, createEventSaga),
+  takeLatest(
+    [FETCH_ALL_EVENTS_REQUEST, FETCH_USER_SUCCESS, SIGNUP_SUCCESS],
+    fetchAllEventsSaga
+  )
 ];
