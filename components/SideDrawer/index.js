@@ -24,9 +24,8 @@ export default styled(SideDrawer)`
   width: 15%;
   min-width: 300px;
   height: 100%;
-  background-color: #222;
+  background-color: ${({ theme }) => theme.secondaryDark};
   color: #fff;
-  border: 1px solid #222;
 
   .list {
     padding: 2rem 0;
@@ -40,7 +39,7 @@ export default styled(SideDrawer)`
     }
     .list-item:hover,
     .list-item-active {
-      background-color: #eee;
+      background-color: ${({ theme }) => theme.secondaryWhite};
       color: #222;
     }
   }

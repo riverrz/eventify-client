@@ -94,6 +94,7 @@ const CreateEvent = ({ className, createEventRequest, loading }) => {
 };
 
 const StyledCreateEvent = styled(CreateEvent)`
+  color: ${({ theme }) => theme.primaryDark};
   .form {
     width: 50%;
     margin: 2rem auto;

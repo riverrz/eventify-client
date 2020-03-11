@@ -42,19 +42,16 @@ const Navbar = ({ className, isLoggedIn, logoutSuccess }) => (
 );
 
 const Nav = styled.nav`
-  color: #111;
-  border-bottom: 1px solid #222;
+  color: ${({ theme }) => theme.primaryDark};
 `;
 
 const NavItem = styled.li`
   padding: 10px;
   border-bottom: 1px solid transparent;
   cursor: pointer;
-  color: #8a8a8a;
   :hover,
   .active {
-    border-bottom: 1px solid #333;
-    color: #222;
+    border-bottom: 1px solid ${({ theme }) => theme.primaryDark};
   }
 `;
 
