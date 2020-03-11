@@ -6,10 +6,10 @@ const initialState = {
     loading: false,
     error: false
   },
-  allEvents: {
+  events: {
     loading: false,
     error: false,
-    data: []
+    data: {} // {createdEvents: [], invitedEvents: []}
   }
 };
 
@@ -30,6 +30,21 @@ export default function reducer(state = initialState, { type, payload }) {
         draft.createEvent.loading = false;
         draft.createEvent.error = true;
         break;
+      }
+      case actionTypes.FETCH_ALL_EVENTS_REQUEST: {
+        draft.events.loading = true;
+        draft.events.error = false;
+        draft.events.data = Object.assign({}, initialState.events.data);
+      }
+      case actionTypes.FETCH_ALL_EVENTS_SUCCESS: {
+        draft.events.loading = false;
+        draft.events.error = false;
+        draft.events.data = payload;
+      }
+      case actionTypes.FETCH_ALL_EVENTS_ERROR: {
+        draft.events.loading = false;
+        draft.events.error = true;
+        draft.events.data = Object.assign({}, initialState.events.data);
       }
     }
   });

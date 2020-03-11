@@ -1,9 +1,14 @@
-import { takeEvery, call, put } from "redux-saga/effects";
+import { takeEvery, call, put, takeLatest } from "redux-saga/effects";
 import cogoToast from "cogo-toast";
 import * as actionTypes from "./constants";
 import config from "config/env";
 import request from "lib/request";
-import { createEventSuccess, createEventError } from "./actions";
+import {
+  createEventSuccess,
+  createEventError,
+  fetchAllEventsSuccess,
+  fetchAllEventsError
+} from "./actions";
 
 function* createEventSaga({ payload }) {
   try {
@@ -20,4 +25,17 @@ function* createEventSaga({ payload }) {
   }
 }
 
-export default [takeEvery(actionTypes.CREATE_EVENT_REQUEST, createEventSaga)];
+function* fetchAllEventsSaga({ payload }) {
+  try {
+    const requestUrl = `${config.apiUrl}/event/all`;
+    const data = yield call(request, requestUrl);
+    yield put(fetchAllEventsSuccess(data));
+  } catch (error) {
+    yield put(fetchAllEventsError(error));
+  }
+}
+
+export default [
+  takeEvery(actionTypes.CREATE_EVENT_REQUEST, createEventSaga),
+  takeLatest(actionTypes.FETCH_ALL_EVENTS_REQUEST, fetchAllEventsSaga)
+];

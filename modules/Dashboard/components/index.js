@@ -1,8 +1,8 @@
 import styled from "styled-components";
 import { useState } from "react";
-import SideDrawer from "components/SideDrawer";
 import Content from "components/Content";
 import AllEvents from "./AllEvents";
+import SideDrawer from "./SideDrawer";
 import CreateEvent from "./CreateEvent";
 
 const tabs = ["All events", "Create an event", "Invites"];
