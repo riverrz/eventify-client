@@ -13,7 +13,8 @@ const SideDrawer = ({ className, tabs, selectedTab, setSelectedTab }) => {
               selectedTab === title ? "list-item-active" : ""
             }`}
           >
-            <Icon size={25} icon={icon} /> {title}
+            <Icon className="icon" size={25} icon={icon} /> 
+            <span className="title">{title}</span>
           </li>
         ))}
       </ul>
@@ -22,12 +23,14 @@ const SideDrawer = ({ className, tabs, selectedTab, setSelectedTab }) => {
 };
 
 export default styled(SideDrawer)`
-  width: 15%;
-  min-width: 300px;
-  height: 100%;
+  height: 100vh;
   background-color: ${({ theme }) => theme.secondaryDark};
   color: #fff;
-
+  position: fixed;
+  top:0;
+  left: 0;
+  transition: width ease-in-out 0.3s;
+  width: 4rem;
   .list {
     padding: 2rem 0;
     .list-item {
@@ -36,11 +39,27 @@ export default styled(SideDrawer)`
       font-size: 1.2rem;
       cursor: pointer;
       transition: all 0.3s;
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      flex-wrap: nowrap;
     }
     .list-item:hover,
     .list-item-active {
       background-color: ${({ theme }) => theme.secondaryWhite};
       color: #222;
+    }
+  }
+  .title {
+    display: none;
+  }
+  .icon {
+    margin-right: 15px;
+  }
+  :hover {
+    width: 15rem;
+    .title {
+      display: initial;
     }
   }
 `;
