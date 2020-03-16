@@ -52,6 +52,9 @@ export default styled(SideDrawer)`
   }
   .title {
     display: none;
+    white-space: nowrap;
+    overflow: hidden;
+
   }
   .icon {
     margin-right: 15px;
