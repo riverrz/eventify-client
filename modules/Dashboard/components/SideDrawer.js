@@ -10,7 +10,7 @@ const SideDrawer = ({ className, tabs, selectedTab, setSelectedTab }) => {
             key={title}
             onClick={() => setSelectedTab(query)}
             className={`list-item ${
-              selectedTab === title ? "list-item-active" : ""
+              selectedTab === query ? "list-item-active" : ""
             }`}
           >
             <Icon className="icon" size={25} icon={icon} /> 
