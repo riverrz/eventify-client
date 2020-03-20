@@ -86,7 +86,7 @@ const CreateEvent = ({ className, createEventRequest, loading }) => {
                     />
                   )}
                 </Field>
-                <Field name="banner">
+                <Field name="banner" required>
                   {({ field, form }) => (
                     <Files
                       multiple={false}
@@ -103,7 +103,7 @@ const CreateEvent = ({ className, createEventRequest, loading }) => {
                           <div
                             {...getDropZoneProps({ className: "myDropZone" })}
                           />
-                          <button onClick={browseFiles}>Select files...</button>
+                          <button type="button" onClick={browseFiles}>Select files...</button>
                           <ol>
                             {!isEmpty(field.value) && (
                               <li key={field.value.name}>{field.value.name}</li>
