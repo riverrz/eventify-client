@@ -1,5 +1,8 @@
 import Document, { Html, Head, Main, NextScript } from "next/document";
 import { ServerStyleSheet } from "styled-components";
+import es6promise from 'es6-promise';
+import 'isomorphic-unfetch';
+es6promise.polyfill();
 
 class CustomDocument extends Document {
   static async getInitialProps(ctx) {
