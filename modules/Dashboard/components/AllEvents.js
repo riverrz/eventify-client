@@ -1,14 +1,15 @@
 import styled from "styled-components";
+import { isEmpty } from "ramda";
 import Grid from "components/Grid";
 import EventCard from "components/EventCard";
-import { isEmpty } from "ramda";
+import { camel2title } from "utils";
 
 const AllEvents = ({ className, events }) => {
   return (
     <main className={className}>
       {Object.entries(events).map(([typeOfEvent, events]) => (
         <div className="event-container" key={typeOfEvent}>
-          <h2>{typeOfEvent}</h2>
+          <h2>{camel2title(typeOfEvent)}</h2>
           {!isEmpty(events) ? (
             <Grid className="event-grid">
               {events.map(event => (
@@ -28,7 +29,7 @@ export default styled(AllEvents)`
   text-align: left;
   .event-container {
     margin: 0 2rem;
-    border-bottom: 1px solid ${({ theme }) => theme.primaryDark}
+    border-bottom: 1px solid ${({ theme }) => theme.primaryDark};
   }
   .empty-events-text {
     padding: 2rem;

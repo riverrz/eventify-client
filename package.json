@@ -113,7 +113,8 @@
                 "./"
               ],
               "alias": {
-                "components": "./components"
+                "components": "./components",
+                "modules": "./modules"
               }
             }
           ],
