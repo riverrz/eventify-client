@@ -44,7 +44,6 @@ const Dashboard = ({ className, allEvents, router }) => {
   );
 };
 const StyledDashboard = styled(Dashboard)`
-  height: 100%;
   display: flex;
 `;
 

@@ -27,9 +27,6 @@ const Events = ({ className, data }) => {
 
 export default styled(Events)`
   text-align: left;
-  .event-container {
-    margin: 0 2rem;
-  }
   .event-container:not(:last-child) {
     border-bottom: 1px solid ${({ theme }) => theme.primaryDark};
   }
@@ -38,5 +35,15 @@ export default styled(Events)`
   }
   .event-grid {
     padding: 2rem;
+  }
+  .event-container {
+    h2 {
+      text-align: center;
+    }
+  }
+  @media only screen and (min-width: 768px) {
+    .event-container {
+      margin: 0 2rem;
+    }
   }
 `;

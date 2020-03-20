@@ -2,9 +2,9 @@ import styled from "styled-components";
 
 const Div = styled.div`
   width: 100%;
-  padding: 1rem;
   text-align: center;
   @media only screen and (min-width: 768px) {
+    padding: 1rem;
     margin-left: 5rem;
   }
 `;
