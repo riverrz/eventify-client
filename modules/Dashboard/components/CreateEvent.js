@@ -2,15 +2,26 @@ import { useCallback } from "react";
 import { connect } from "react-redux";
 import { Formik, Field } from "formik";
 import styled from "styled-components";
+import Files from "react-butterfiles";
 import TagsInput from "react-tagsinput";
 import cogoToast from "cogo-toast";
 import { createStructuredSelector } from "reselect";
-import { pick, path } from "ramda";
+import { pick, path, isEmpty } from "ramda";
 import { bindActionCreators } from "redux";
 import * as actions from "modules/Dashboard/redux/actions";
 import Button from "components/Button";
 import Spinner from "components/Spinner";
 import { emailRegex } from "lib/validations/regex";
+
+const initialValues = {
+  title: "",
+  description: "",
+  totalParticipantsAllowed: 0,
+  startTimeStamp: "",
+  endTimeStamp: "",
+  emailArr: [],
+  banner: {}
+};
 
 const CreateEvent = ({ className, createEventRequest, loading }) => {
   const validationErrorMessage = useCallback(
@@ -22,73 +33,94 @@ const CreateEvent = ({ className, createEventRequest, loading }) => {
       <h2>Create an event</h2>
       {!loading && (
         <Formik
-          initialValues={{
-            title: "",
-            description: "",
-            totalParticipantsAllowed: 0,
-            startTimeStamp: "",
-            endTimeStamp: "",
-            emailArr: []
-          }}
+          initialValues={initialValues}
           onSubmit={(values, { resetForm }) => {
             createEventRequest(values);
             resetForm();
           }}
         >
-          {props => (
-            <form onSubmit={props.handleSubmit} className="form">
-              <Field
-                name="title"
-                className="input-field"
-                placeholder="Enter title of your event"
-                required
-              />
-              <Field
-                name="description"
-                className="input-field"
-                placeholder="Enter description of your event"
-                required
-              />
-              <Field
-                type="number"
-                className="input-field"
-                name="totalParticipantsAllowed"
-                required
-              />
-              <Field
-                type="date"
-                className="input-field"
-                name="startTimeStamp"
-                required
-              />
-              <Field
-                type="date"
-                className="input-field"
-                name="endTimeStamp"
-                required
-              />
-              <Field name="emailArr" required>
-                {({ field, form }) => (
-                  <TagsInput
-                    value={field.value}
-                    onlyUnique
-                    validationRegex={emailRegex}
-                    inputProps={{
-                      placeholder: "Enter participants' email addresses"
-                    }}
-                    onValidationReject={validationErrorMessage}
-                    onChange={x => form.setFieldValue("emailArr", x)}
-                  />
-                )}
-              </Field>
-              <Button type="submit">Submit</Button>
-            </form>
-          )}
+          {props =>
+            (
+              <form onSubmit={props.handleSubmit} className="form">
+                <Field
+                  name="title"
+                  className="input-field"
+                  placeholder="Enter title of your event"
+                  required
+                />
+                <Field
+                  name="description"
+                  className="input-field"
+                  placeholder="Enter description of your event"
+                  required
+                />
+                <Field
+                  type="number"
+                  className="input-field"
+                  name="totalParticipantsAllowed"
+                  required
+                />
+                <Field
+                  type="date"
+                  className="input-field"
+                  name="startTimeStamp"
+                  required
+                />
+                <Field
+                  type="date"
+                  className="input-field"
+                  name="endTimeStamp"
+                  required
+                />
+                <Field name="emailArr" required>
+                  {({ field, form }) => (
+                    <TagsInput
+                      value={field.value}
+                      onlyUnique
+                      validationRegex={emailRegex}
+                      inputProps={{
+                        placeholder: "Enter participants' email addresses"
+                      }}
+                      onValidationReject={validationErrorMessage}
+                      onChange={x => form.setFieldValue("emailArr", x)}
+                    />
+                  )}
+                </Field>
+                <Field name="banner">
+                  {({ field, form }) => (
+                    <Files
+                      multiple={false}
+                      maxSize="2mb"
+                      accept={["image/jpg", "image/jpeg"]}
+                      onSuccess={([banner]) =>
+                        form.setFieldValue("banner", banner)
+                      }
+                      onError={errors => console.log(errors)}
+                    >
+                      {({ browseFiles, getDropZoneProps, getLabelProps }) => (
+                        <>
+                          <label {...getLabelProps()}>Your files</label>
+                          <div
+                            {...getDropZoneProps({ className: "myDropZone" })}
+                          />
+                          <button onClick={browseFiles}>Select files...</button>
+                          <ol>
+                            {!isEmpty(field.value) && (
+                              <li key={field.value.name}>{field.value.name}</li>
+                            )}
+                          </ol>
+                        </>
+                      )}
+                    </Files>
+                  )}
+                </Field>
+                <Button type="submit">Submit</Button>
+              </form>
+            )
+          }
         </Formik>
       )}
-      {loading && (
-        <Spinner />
-      )}
+      {loading && <Spinner />}
     </main>
   );
 };

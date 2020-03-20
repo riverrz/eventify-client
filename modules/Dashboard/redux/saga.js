@@ -1,4 +1,5 @@
 import { takeEvery, call, put, takeLatest } from "redux-saga/effects";
+import { isEmpty, path } from "ramda";
 import cogoToast from "cogo-toast";
 import { CREATE_EVENT_REQUEST, FETCH_ALL_EVENTS_REQUEST } from "./constants";
 import {
@@ -8,15 +9,45 @@ import {
 import config from "config/env";
 import request from "lib/request";
 import {
+  getPresignedPostData,
+  uploadFileToS3
+} from "modules/Dashboard/helpers/upload";
+import {
   createEventSuccess,
   createEventError,
   fetchAllEventsSuccess,
   fetchAllEventsError
 } from "./actions";
 
+function* uploadBanner(banner) {
+  try {
+    const { data: presignedPostData } = yield getPresignedPostData(banner);
+    const { file } = banner.src;
+    yield uploadFileToS3(presignedPostData, file);
+    return presignedPostData;
+  } catch (e) {
+    yield cogoToast.error(
+      "We had trouble uploading the banner. Please try via editing the event!"
+    );
+  }
+}
+
 function* createEventSaga({ payload }) {
   try {
+    const { banner } = payload;
+    let presignedPostData = {};
+    try {
+      if (banner && !isEmpty(banner)) {
+        presignedPostData = yield* uploadBanner(banner);
+      }
+    } catch (error) {
+      console.log(error.message);
+    }
     const requestUrl = `${config.apiUrl}/event/`;
+    const bannerKey = path(["fields", "key"], presignedPostData);
+    if(bannerKey) {
+      payload.banner = bannerKey;
+    }
     const data = yield call(request, requestUrl, {
       method: "POST",
       body: JSON.stringify(payload)

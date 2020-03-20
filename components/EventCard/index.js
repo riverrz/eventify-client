@@ -2,6 +2,7 @@ import styled from "styled-components";
 import Icon from "react-icons-kit";
 import { calendar } from "react-icons-kit/fa/calendar";
 import Flex from "components/Flex";
+import config from 'config/env';
 
 const EventCard = ({ className, event }) => {
   const { title, description, banner, startTimeStamp, endTimeStamp } = event;
@@ -9,7 +10,7 @@ const EventCard = ({ className, event }) => {
     <div className={className}>
       {banner && (
         <div className="img-container">
-          <img src="" alt="" />
+          <img src={`${config.cdnUrl}/${banner}`} alt="Banner" />
         </div>
       )}
       <div className="primary-container">
