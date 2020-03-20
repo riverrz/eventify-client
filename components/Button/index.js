@@ -4,7 +4,7 @@ export default styled.button`
     padding: 1rem 1.5rem;
     font-size: 1.1rem;
     color: #fff;
-    background-color: ${({ theme }) => theme.secondaryDark};
+    background-color: ${({ theme, backgroundColor }) => backgroundColor ? backgroundColor : theme.secondaryDark};
     outline: none;
     border: none;
     cursor: pointer;
