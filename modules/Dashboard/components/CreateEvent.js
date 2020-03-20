@@ -103,7 +103,7 @@ const CreateEvent = ({ className, createEventRequest, loading }) => {
                         <label className="upload" {...getLabelProps()}>
                           Upload a banner
                         </label>
-                        <ResponsiveFlex width="1120px">
+                        <ResponsiveFlex width="1120px" justify="space-around">
                           <span
                             {...getDropZoneProps({ className: "drop-zone" })}
                           >
