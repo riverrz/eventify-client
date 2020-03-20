@@ -88,6 +88,7 @@ const StyledNavbar = styled(Navbar)`
     }
     .nav-list {
       padding: 0;
+      flex: 1;
     }
   }
 `;

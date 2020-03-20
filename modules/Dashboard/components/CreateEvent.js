@@ -11,6 +11,7 @@ import { bindActionCreators } from "redux";
 import * as actions from "modules/Dashboard/redux/actions";
 import Button from "components/Button";
 import Spinner from "components/Spinner";
+import { ResponsiveFlex } from "components/Flex";
 import { emailRegex } from "lib/validations/regex";
 import theme from "theme";
 
@@ -99,23 +100,29 @@ const CreateEvent = ({ className, createEventRequest, loading }) => {
                   >
                     {({ browseFiles, getDropZoneProps, getLabelProps }) => (
                       <>
-                        <label className="upload" {...getLabelProps()}>Upload a banner</label>
-                        <span {...getDropZoneProps({ className: "drop-zone" })}>
-                          Drop your banner here...
-                        </span>
-                        <span className="divider"> OR </span>
-                        <Button
-                          backgroundColor={theme.primaryDark}
-                          type="button"
-                          onClick={browseFiles}
-                        >
-                          Select a banner
-                        </Button>
-                        <ol>
-                          {!isEmpty(field.value) && (
-                            <li key={field.value.name}>{field.value.name}</li>
-                          )}
-                        </ol>
+                        <label className="upload" {...getLabelProps()}>
+                          Upload a banner
+                        </label>
+                        <ResponsiveFlex width="1120px">
+                          <span
+                            {...getDropZoneProps({ className: "drop-zone" })}
+                          >
+                            Drop your banner here...
+                          </span>
+                          <span className="divider"> OR </span>
+                          <Button
+                            backgroundColor={theme.primaryDark}
+                            type="button"
+                            onClick={browseFiles}
+                          >
+                            Select a banner
+                          </Button>
+                          <ol>
+                            {!isEmpty(field.value) && (
+                              <li key={field.value.name}>{field.value.name}</li>
+                            )}
+                          </ol>
+                        </ResponsiveFlex>
                       </>
                     )}
                   </Files>
@@ -158,7 +165,7 @@ const StyledCreateEvent = styled(CreateEvent)`
       padding: 1rem;
     }
     .divider {
-      margin: 0 1rem;
+      margin: 1rem;
     }
     button[type="submit"] {
       margin-top: 2rem;

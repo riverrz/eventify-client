@@ -33,9 +33,12 @@ export default styled(SideDrawer)`
   width: 4rem;
   .list {
     padding: 2rem 0;
+    display: flex;
+    flex-flow: column nowrap;
+    margin-top: 5rem;
     .list-item {
       padding: 1rem;
-      margin: 2rem 0;
+      margin: 1.5rem 0;
       font-size: 1.2rem;
       cursor: pointer;
       transition: all 0.3s;
@@ -56,13 +59,32 @@ export default styled(SideDrawer)`
     overflow: hidden;
 
   }
-  .icon {
-    margin-right: 15px;
+  @media only screen and (min-width: 901px) {
+    :hover {
+      width: 15rem;
+      .title {
+        display: initial;
+      }
+      .icon {
+        margin-right: 15px;
+      }
+    }
   }
-  :hover {
-    width: 15rem;
-    .title {
-      display: initial;
+
+  @media only screen and (max-width: 900px) {
+    top: initial;
+    bottom: 0;
+    height: 4rem;
+    width: 100vw;
+    .list {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      flex-flow: row nowrap;
+      justify-content: space-evenly;
+      .list-item {
+        margin: 0;
+      }
     }
   }
 `;
