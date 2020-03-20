@@ -34,7 +34,7 @@ function* uploadBanner(banner) {
 
 function* createEventSaga({ payload }) {
   try {
-    const { banner } = payload;
+    const { banner, ...rest } = payload;
     let presignedPostData = {};
     try {
       if (banner && !isEmpty(banner)) {
@@ -46,21 +46,22 @@ function* createEventSaga({ payload }) {
     const requestUrl = `${config.apiUrl}/event/`;
     const bannerKey = path(["fields", "key"], presignedPostData);
     if(bannerKey) {
-      payload.banner = bannerKey;
+      rest.banner = bannerKey;
     }
     const data = yield call(request, requestUrl, {
       method: "POST",
-      body: JSON.stringify(payload)
+      body: JSON.stringify(rest)
     });
     cogoToast.success("Your event has been successfully created!");
     yield put(createEventSuccess(data));
+    yield* fetchAllEventsSaga();
   } catch (error) {
     cogoToast.error(`Oops.. ${error.message}`);
     yield put(createEventError(error));
   }
 }
 
-function* fetchAllEventsSaga({ payload }) {
+function* fetchAllEventsSaga() {
   try {
     const requestUrl = `${config.apiUrl}/event/all`;
     const data = yield call(request, requestUrl);
