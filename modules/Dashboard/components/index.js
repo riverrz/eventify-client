@@ -1,14 +1,14 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { withRouter } from "next/router";
 import styled from "styled-components";
 import { pencil } from "react-icons-kit/fa/pencil";
 import { calendarPlusO } from "react-icons-kit/fa/calendarPlusO";
 import { envelope } from "react-icons-kit/fa/envelope";
 import Content from "components/Content";
-import AllEvents from "./AllEvents";
+import Events from "./Events";
 import SideDrawer from "./SideDrawer";
 import CreateEvent from "./CreateEvent";
-import { pathOr } from "ramda";
+import { pathOr, pick } from "ramda";
 
 const tabs = [
   { title: "All events", icon: calendarPlusO, query: "all" },
@@ -23,6 +23,7 @@ const Dashboard = ({ className, allEvents, router }) => {
     setSelectedTab(query);
     router.push(`/dashboard?tab=${query}`);
   };
+  const invitedEvents = useMemo(() => pick(['invitedEvents'], allEvents), [allEvents])
   return (
     <main className={className}>
       <SideDrawer
@@ -31,13 +32,13 @@ const Dashboard = ({ className, allEvents, router }) => {
         setSelectedTab={handleSelection}
       />
       <Content open={selectedTab === tabs[0].query}>
-        <AllEvents events={allEvents} />
+        <Events data={allEvents} />
       </Content>
       <Content open={selectedTab === tabs[1].query}>
         <CreateEvent />
       </Content>
       <Content open={selectedTab === tabs[2].query}>
-        <AllEvents events={allEvents} />
+        <Events data={invitedEvents} />
       </Content>
     </main>
   );

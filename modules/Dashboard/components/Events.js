@@ -4,10 +4,10 @@ import Grid from "components/Grid";
 import EventCard from "components/EventCard";
 import { camel2title } from "utils";
 
-const AllEvents = ({ className, events }) => {
+const Events = ({ className, data }) => {
   return (
     <main className={className}>
-      {Object.entries(events).map(([typeOfEvent, events]) => (
+      {Object.entries(data).map(([typeOfEvent, events]) => (
         <div className="event-container" key={typeOfEvent}>
           <h2>{camel2title(typeOfEvent)}</h2>
           {!isEmpty(events) ? (
@@ -25,10 +25,12 @@ const AllEvents = ({ className, events }) => {
   );
 };
 
-export default styled(AllEvents)`
+export default styled(Events)`
   text-align: left;
   .event-container {
     margin: 0 2rem;
+  }
+  .event-container:not(:last-child) {
     border-bottom: 1px solid ${({ theme }) => theme.primaryDark};
   }
   .empty-events-text {
