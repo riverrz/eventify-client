@@ -35,7 +35,5 @@ export default styled(AllEvents)`
   }
   .event-grid {
     padding: 2rem;
-    align-items: start;
-    justify-items: start;
   }
 `;

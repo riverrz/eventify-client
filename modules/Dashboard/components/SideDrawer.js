@@ -5,10 +5,10 @@ const SideDrawer = ({ className, tabs, selectedTab, setSelectedTab }) => {
   return (
     <aside className={className}>
       <ul className="list">
-        {tabs.map(({ title, icon }) => (
+        {tabs.map(({ title, icon, query }) => (
           <li
             key={title}
-            onClick={() => setSelectedTab(title)}
+            onClick={() => setSelectedTab(query)}
             className={`list-item ${
               selectedTab === title ? "list-item-active" : ""
             }`}
