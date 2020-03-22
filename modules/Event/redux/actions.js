@@ -6,17 +6,3 @@ export function pariticipateRequest(payload) {
     payload
   };
 }
-
-export function pariticipateSuccess(payload) {
-  return {
-    type: actionTypes.PARTICIPATE_SUCCESS,
-    payload
-  };
-}
-
-export function pariticipateError(payload) {
-  return {
-    type: actionTypes.PARTICIPATE_ERROR,
-    payload
-  };
-}

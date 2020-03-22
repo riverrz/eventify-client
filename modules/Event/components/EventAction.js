@@ -2,22 +2,26 @@ import { useEffect, useState, useCallback } from "react";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import { createStructuredSelector } from "reselect";
-import { pick } from "ramda";
+import { pick, merge } from "ramda";
 import cogoToast from "cogo-toast";
 import Button from "components/Button";
 import Spinner from "components/Spinner";
 import { makeSelectParticipationTokens } from "modules/Auth/redux/selectors";
 import * as authActions from "modules/Auth/redux/actions";
+import * as eventActions from "modules/Event/redux/actions";
 import theme from "theme";
 import request from "lib/request";
 import config from "config/env";
 
 const EventAction = ({
-  event: { eventId },
+  event: { eventId, title },
   participationTokens,
-  fetchTokenSuccess
+  fetchTokenSuccess,
+  pariticipateRequest
 }) => {
   const [loading, setLoading] = useState(false);
+
+  // fetch token logic
   const fetchToken = useCallback(async () => {
     try {
       if (!participationTokens[eventId]) {
@@ -36,11 +40,24 @@ const EventAction = ({
     }
   }, [eventId, participationTokens]);
 
+  // fetch token when component did mount
   useEffect(() => {
     fetchToken();
   }, []);
+
+  // btn click handler
+  const handleClick = useCallback(() => {
+    const token = participationTokens[eventId];
+    if (token) {
+      setLoading(true);
+      setTimeout(() => {
+        setLoading(false);
+      }, 500);
+      pariticipateRequest({ token, title });
+    }
+  }, [participationTokens, eventId, title]);
   return (
-    <Button backgroundColor={theme.primaryGreen}>
+    <Button onClick={handleClick} backgroundColor={theme.primaryGreen}>
       {loading ? (
         <Spinner type="TailSpin" color="#fff" height={20} width={20} />
       ) : (
@@ -55,6 +72,12 @@ const mapStateToProps = createStructuredSelector({
 });
 
 const mapDispatchToProps = dispatch =>
-  bindActionCreators(pick(["fetchTokenSuccess"], authActions), dispatch);
+  bindActionCreators(
+    merge(
+      pick(["fetchTokenSuccess"], authActions),
+      pick(["pariticipateRequest"], eventActions)
+    ),
+    dispatch
+  );
 
 export default connect(mapStateToProps, mapDispatchToProps)(EventAction);
