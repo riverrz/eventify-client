@@ -12,7 +12,7 @@ const EventCard = ({ className, event }) => {
       <div className={className}>
         {banner && (
           <div className="img-container">
-            <img src={`${config.cdnUrl}/${banner}`} alt="Banner" />
+            <img src={`${config.cdnUrl}/${banner}`} alt="Event Banner" />
           </div>
         )}
         <div className="primary-container">

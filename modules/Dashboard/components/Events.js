@@ -13,7 +13,7 @@ const Events = ({ className, data }) => {
           {!isEmpty(events) ? (
             <Grid className="event-grid">
               {events.map(event => (
-                <EventCard key={event._id} event={event} />
+                <EventCard key={event.eventId} event={event} />
               ))}
             </Grid>
           ) : (

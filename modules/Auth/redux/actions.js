@@ -44,3 +44,10 @@ export const fetchUserError = payload => {
     payload
   };
 };
+
+export function fetchTokenSuccess(payload) {
+  return {
+    type: actionTypes.FETCH_PARTICIPATION_TOKEN_SUCCESS,
+    payload
+  };
+}

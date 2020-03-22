@@ -5,7 +5,8 @@ const initialState = {
   loading: false,
   data: {
     token: false,
-    user: {}
+    user: {},
+    participationTokens: {}
   },
   error: false
 };
@@ -55,6 +56,11 @@ export default function(state = initialState, { type, payload }) {
         draft.loading = false;
         draft.error = true;
         draft.data = Object.assign({}, initialState.data);
+        break;
+      }
+      case actionTypes.FETCH_PARTICIPATION_TOKEN_SUCCESS: {
+        const { eventId, token } = payload;
+        draft.data.participationTokens[eventId] = token;
         break;
       }
     }

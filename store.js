@@ -37,8 +37,9 @@ function configureStore(initialState = {}) {
         data: {
           token: state.auth.data.token,
           user: state.auth.data.user,
+          participationTokens: state.auth.data.participationTokens
         }
-      }
+      },
     });
   });
 
