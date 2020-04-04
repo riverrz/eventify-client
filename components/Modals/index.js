@@ -6,7 +6,7 @@ import { pick, isEmpty } from "ramda";
 import { makeSelectModals } from "modules/Global/redux/selectors";
 import * as actions from "modules/Global/redux/actions";
 import Portal from "components/Portal";
-import Modal from "components/Modal";
+import Modal from "./Modal";
 import Overlay from "components/Overlay";
 
 function Modals({ modals, closeModal }) {

@@ -1,6 +1,6 @@
 import { produce } from "immer";
 import { nanoid } from "nanoid";
-import {} from "ramda";
+import { omit } from "ramda";
 import * as actionTypes from "./constants";
 
 const initialState = {
