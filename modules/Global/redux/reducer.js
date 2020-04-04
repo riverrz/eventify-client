@@ -1,5 +1,5 @@
 import { produce } from "immer";
-import nanoid from "nanoid";
+import { nanoid } from "nanoid";
 import {} from "ramda";
 import * as actionTypes from "./constants";
 

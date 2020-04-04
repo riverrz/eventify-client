@@ -3,6 +3,7 @@ import createSagaMiddleware from "redux-saga";
 import { clone, mergeDeepRight } from "ramda";
 import AuthReducer from "modules/Auth/redux/reducer";
 import DashboardReducer from "modules/Dashboard/redux/reducer";
+import GlobalReducer from 'modules/Global/redux/reducer'
 import { loadState, saveState } from "./storage";
 import rootSaga from "./saga";
 
@@ -21,7 +22,8 @@ function configureStore(initialState = {}) {
   const store = createStore(
     combineReducers({
       auth: AuthReducer,
-      dashboard: DashboardReducer
+      dashboard: DashboardReducer,
+      global: GlobalReducer
     }),
     mergeDeepRight(initialState, savedState),
     bindMiddleware([sagaMiddleware])
