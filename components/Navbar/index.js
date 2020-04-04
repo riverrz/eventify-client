@@ -1,14 +1,19 @@
+import { Fragment } from "react";
 import Link from "components/Link";
 import styled from "styled-components";
 import { createStructuredSelector } from "reselect";
 import { bindActionCreators } from "redux";
 import { pick } from "ramda";
 import { connect } from "react-redux";
-import { makeSelectLoggedIn } from "modules/Auth/redux/selectors";
+import {
+  makeSelectLoggedIn,
+  makeSelectBalance,
+} from "modules/Auth/redux/selectors";
 import * as actions from "modules/Auth/redux/actions";
 
-const Navbar = ({ className, isLoggedIn, logoutSuccess }) => (
+const Navbar = ({ className, isLoggedIn, logoutSuccess, balance }) => (
   <Nav className={className}>
+    <h2 className="title">Eventify</h2>
     <ul className="nav-list">
       <Link activeClassName="nav-active" href="/">
         <NavItem>
@@ -23,21 +28,23 @@ const Navbar = ({ className, isLoggedIn, logoutSuccess }) => (
         </Link>
       )}
       {isLoggedIn && (
-        <Link href="/dashboard">
-          <NavItem>
-            <a>Dashboard</a>
-          </NavItem>
-        </Link>
-      )}
-      {isLoggedIn && (
-        <Link href="/">
-          <NavItem onClick={() => logoutSuccess()}>
-            <a>Log out</a>
-          </NavItem>
-        </Link>
+        <Fragment>
+          <Link href="/dashboard">
+            <NavItem>
+              <a>Dashboard</a>
+            </NavItem>
+          </Link>
+          <Link href="/">
+            <NavItem onClick={() => logoutSuccess()}>
+              <a>Log out</a>
+            </NavItem>
+          </Link>
+        </Fragment>
       )}
     </ul>
-    <h2 className="title">Eventify</h2>
+    {isLoggedIn && (
+      <h4 className="balance">Balance: {balance} Coins</h4> 
+    )}
   </Nav>
 );
 
@@ -63,17 +70,18 @@ const StyledNavbar = styled(Navbar)`
   .nav-list {
     flex: 0 0 30%;
     margin: 0;
-    padding-left: 10%;
+    margin-right: auto;
     list-style: none;
     display: flex;
     justify-content: space-around;
-    align-items: flex-end;
+    align-items: center;
   }
   .title {
-    flex: 1;
-    margin: 0;
-    padding-left: 15%;
-    text-align: center;
+    display: inline-block;
+    padding-left: 10%;
+  }
+  .balance {
+    margin-left: auto;
   }
   a {
     text-decoration: none;
@@ -94,10 +102,11 @@ const StyledNavbar = styled(Navbar)`
 `;
 
 const mapStateToProps = createStructuredSelector({
-  isLoggedIn: makeSelectLoggedIn()
+  isLoggedIn: makeSelectLoggedIn(),
+  balance: makeSelectBalance(),
 });
 
-const mapDispatchToProps = dispatch =>
+const mapDispatchToProps = (dispatch) =>
   bindActionCreators(pick(["logoutSuccess"], actions), dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(StyledNavbar);

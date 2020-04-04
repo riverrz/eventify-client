@@ -1,7 +1,7 @@
 import { createSelector } from "reselect";
 import { compose, path, isEmpty, not } from "ramda";
 
-const selectAuth = state => state.auth;
+const selectAuth = (state) => state.auth;
 
 export const makeSelectLoggedIn = () =>
   createSelector(selectAuth, compose(not, isEmpty, path(["data", "user"])));
@@ -14,3 +14,6 @@ export const makeSelectUser = () =>
 
 export const makeSelectParticipationTokens = () =>
   createSelector(selectAuth, path(["data", "participationTokens"]));
+
+export const makeSelectBalance = () =>
+  createSelector(selectAuth, path(["data", "user", "balance"]));
