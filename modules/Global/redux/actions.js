@@ -14,7 +14,7 @@ export const openModal = (payload) => {
   };
 };
 
-export const openModal = (payload) => {
+export const closeModal = (payload) => {
   return {
     type: actionTypes.CLOSE_MODAL,
     payload,
