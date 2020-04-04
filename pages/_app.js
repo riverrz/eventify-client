@@ -5,6 +5,7 @@ import withRedux from "next-redux-wrapper";
 import withReduxSaga from "next-redux-saga";
 import { path } from "ramda";
 import PageLayout from "components/PageLayout";
+import Modals from "components/Modals";
 import { initAppState } from "modules/Global/redux/actions";
 import "../styles.css";
 import "react-tagsinput/react-tagsinput.css";
@@ -33,6 +34,7 @@ class MyApp extends App {
       <Provider store={store}>
         <PageLayout>
           <Component {...pageProps} router={router} />
+          <Modals />
         </PageLayout>
       </Provider>
     );
