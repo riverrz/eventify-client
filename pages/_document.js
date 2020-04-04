@@ -40,7 +40,7 @@ class CustomDocument extends Document {
           />
         </Head>
         <body>
-          <div id="modal"></div>
+          <div id="root-modal"></div>
           <Main />
           <NextScript />
         </body>
