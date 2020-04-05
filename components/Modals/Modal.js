@@ -17,9 +17,9 @@ export default function ({
   }, [id]);
   return (
     <Wrapper style={{ zIndex: zIndex * 10 }}>
-      {title && <h2 className="title">{title}</h2>}
       <div className="modal">
-        <Icon icon={times} onClick={handleClose} />
+        {title && <h2 className="title">{title}</h2>}
+        <Icon className="close" icon={times} onClick={handleClose} />
         {React.cloneElement(content, { closeModal: handleClose })}
       </div>
     </Wrapper>
