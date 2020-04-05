@@ -1,4 +1,4 @@
-import { Fragment } from "react";
+import { Fragment, useCallback } from "react";
 import Link from "components/Link";
 import styled from "styled-components";
 import { createStructuredSelector } from "reselect";
@@ -10,43 +10,61 @@ import {
   makeSelectBalance,
 } from "modules/Auth/redux/selectors";
 import * as actions from "modules/Auth/redux/actions";
+import * as globalActions from "modules/Global/redux/actions";
+import AddMoney from "components/AddMoney";
 
-const Navbar = ({ className, isLoggedIn, logoutSuccess, balance }) => (
-  <Nav className={className}>
-    <h2 className="title">Eventify</h2>
-    <ul className="nav-list">
-      <Link activeClassName="nav-active" href="/">
-        <NavItem>
-          <a>Home</a>
-        </NavItem>
-      </Link>
-      {!isLoggedIn && (
-        <Link activeClassName="nav-active" href="/join/register">
+const Navbar = ({
+  className,
+  isLoggedIn,
+  logoutSuccess,
+  balance,
+  openModal,
+}) => {
+  const addMoney = useCallback(
+    () =>
+      openModal({
+        content: <AddMoney />,
+        title: "Top-up your balance"
+      }),
+    [AddMoney, openModal]
+  );
+  return (
+    <Nav className={className}>
+      <h2 className="title">Eventify</h2>
+      <ul className="nav-list">
+        <Link activeClassName="nav-active" href="/">
           <NavItem>
-            <a>Join us</a>
+            <a>Home</a>
           </NavItem>
         </Link>
-      )}
-      {isLoggedIn && (
-        <Fragment>
-          <Link href="/dashboard">
+        {!isLoggedIn && (
+          <Link activeClassName="nav-active" href="/join/register">
             <NavItem>
-              <a>Dashboard</a>
+              <a>Join us</a>
             </NavItem>
           </Link>
-          <Link href="/">
-            <NavItem onClick={() => logoutSuccess()}>
-              <a>Log out</a>
-            </NavItem>
-          </Link>
-        </Fragment>
-      )}
-    </ul>
-    {isLoggedIn && (
-      <h4 className="balance">Balance: {balance} Coins</h4> 
-    )}
-  </Nav>
-);
+        )}
+        {isLoggedIn && (
+          <Fragment>
+            <Link href="/dashboard">
+              <NavItem>
+                <a>Dashboard</a>
+              </NavItem>
+            </Link>
+            <Link href="/">
+              <NavItem onClick={() => logoutSuccess()}>
+                <a>Log out</a>
+              </NavItem>
+            </Link>
+          </Fragment>
+        )}
+      </ul>
+      <div onClick={addMoney} style={{ cursor: 'pointer' }}>
+        {isLoggedIn && <h4 className="balance">Balance: {balance} Coins</h4>}
+      </div>
+    </Nav>
+  );
+};
 
 const Nav = styled.nav`
   color: ${({ theme }) => theme.primaryDark};
@@ -107,6 +125,12 @@ const mapStateToProps = createStructuredSelector({
 });
 
 const mapDispatchToProps = (dispatch) =>
-  bindActionCreators(pick(["logoutSuccess"], actions), dispatch);
+  bindActionCreators(
+    {
+      ...pick(["logoutSuccess"], actions),
+      ...pick(["openModal"], globalActions),
+    },
+    dispatch
+  );
 
 export default connect(mapStateToProps, mapDispatchToProps)(StyledNavbar);
