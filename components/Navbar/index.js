@@ -8,10 +8,12 @@ import { connect } from "react-redux";
 import {
   makeSelectLoggedIn,
   makeSelectBalance,
+  makeSelectAuthLoading,
 } from "modules/Auth/redux/selectors";
 import * as actions from "modules/Auth/redux/actions";
 import * as globalActions from "modules/Global/redux/actions";
 import AddMoney from "components/AddMoney";
+import Spinner from "components/Spinner";
 
 const Navbar = ({
   className,
@@ -19,12 +21,13 @@ const Navbar = ({
   logoutSuccess,
   balance,
   openModal,
+  authLoading,
 }) => {
   const addMoney = useCallback(
     () =>
       openModal({
         content: <AddMoney />,
-        title: "Top-up your balance"
+        title: "Top-up your balance",
       }),
     [AddMoney, openModal]
   );
@@ -59,8 +62,21 @@ const Navbar = ({
           </Fragment>
         )}
       </ul>
-      <div onClick={addMoney} style={{ cursor: 'pointer' }}>
-        {isLoggedIn && <h4 className="balance">Balance: {balance} Coins</h4>}
+      <div onClick={addMoney} style={{ cursor: "pointer" }}>
+        {isLoggedIn && (
+          <h4 className="balance">
+            Balance:{" "}
+            {authLoading ? (
+              <Spinner
+                style={{ dispatch: "inline-block" }}
+                height={20}
+                width={20}
+              />
+            ) : (
+              `${balance} Coins`
+            )}
+          </h4>
+        )}
       </div>
     </Nav>
   );
@@ -122,6 +138,7 @@ const StyledNavbar = styled(Navbar)`
 const mapStateToProps = createStructuredSelector({
   isLoggedIn: makeSelectLoggedIn(),
   balance: makeSelectBalance(),
+  authLoading: makeSelectAuthLoading(),
 });
 
 const mapDispatchToProps = (dispatch) =>

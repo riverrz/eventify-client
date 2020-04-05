@@ -9,6 +9,9 @@ export const makeSelectLoggedIn = () =>
 export const makeSelectAuthToken = () =>
   createSelector(selectAuth, path(["data", "token"]));
 
+export const makeSelectAuthLoading = () =>
+  createSelector(selectAuth, path(["loading"]));
+
 export const makeSelectUser = () =>
   createSelector(selectAuth, path(["data", "user"]));
 
