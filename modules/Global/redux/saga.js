@@ -30,7 +30,7 @@ function* fetchUserSaga({ payload }) {
 function* initAppStateSaga({ payload }) {
   const token = yield select(makeSelectAuthToken());
   const user = yield select(makeSelectUser());
-  if (token && isEmpty(user)) {
+  if (token) {
     yield put(fetchUserRequest());
   } else if (token) {
     yield put(fetchAllEventsRequest());
