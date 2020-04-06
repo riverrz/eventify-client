@@ -1,5 +1,7 @@
 import { useEffect } from "react";
 import { connect } from "react-redux";
+import { path } from "ramda";
+import cogoToast from "cogo-toast";
 import Router from "next/router";
 import { createStructuredSelector } from "reselect";
 import Dashboard from "modules/Dashboard/components";
@@ -10,6 +12,11 @@ const DashboardPage = ({ isLoggedIn, allEvents }) => {
   useEffect(() => {
     if (!isLoggedIn) {
       Router.push("/");
+    } else {
+      const txnStatus = path(["router", "query", "wallet_txn_status"], Router)
+      if (txnStatus && txnStatus === "SUCCESS") {
+        cogoToast.success("Wallet balance successfully updated");
+      }
     }
   }, []);
   if (!isLoggedIn) {
@@ -20,7 +27,7 @@ const DashboardPage = ({ isLoggedIn, allEvents }) => {
 
 const mapStateToProps = createStructuredSelector({
   isLoggedIn: makeSelectLoggedIn(),
-  allEvents: makeSelectAllEvents()
+  allEvents: makeSelectAllEvents(),
 });
 
 export default connect(mapStateToProps)(DashboardPage);
