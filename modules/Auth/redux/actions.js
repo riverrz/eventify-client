@@ -1,53 +1,74 @@
 import * as actionTypes from "./constants";
 
-export const signUpRequest = payload => {
+export const signUpRequest = (payload) => {
   return {
     type: actionTypes.SIGNUP_REQUEST,
-    payload
+    payload,
   };
 };
-export const signUpSuccess = payload => {
+export const signUpSuccess = (payload) => {
   return {
     type: actionTypes.SIGNUP_SUCCESS,
-    payload
+    payload,
   };
 };
-export const signUpError = payload => {
+export const signUpError = (payload) => {
   return {
     type: actionTypes.SIGNUP_ERROR,
-    payload
+    payload,
   };
 };
 
-export const logoutSuccess = payload => {
+export const logoutSuccess = (payload) => {
   return {
     type: actionTypes.LOGOUT_SUCCESS,
-    payload
+    payload,
   };
 };
 
-export const fetchUserRequest = payload => {
+export const fetchUserRequest = (payload) => {
   return {
     type: actionTypes.FETCH_USER_REQUEST,
-    payload
+    payload,
   };
 };
-export const fetchUserSuccess = payload => {
+export const fetchUserSuccess = (payload) => {
   return {
     type: actionTypes.FETCH_USER_SUCCESS,
-    payload
+    payload,
   };
 };
-export const fetchUserError = payload => {
+export const fetchUserError = (payload) => {
   return {
     type: actionTypes.FETCH_USER_ERROR,
-    payload
+    payload,
   };
 };
 
 export function fetchTokenSuccess(payload) {
   return {
     type: actionTypes.FETCH_PARTICIPATION_TOKEN_SUCCESS,
-    payload
+    payload,
+  };
+}
+
+export function walletUpdateRequest(payload) {
+  return {
+    type: actionTypes.WALLET_UPDATE_REQUEST,
+    payload,
+  };
+}
+
+export function walletUpdateSuccess(payload) {
+  return {
+    type: actionTypes.WALLET_UPDATE_SUCCESS,
+    payload,
+  };
+}
+
+export function walletUpdateError(payload) {
+  return {
+    type: actionTypes.WALLET_UPDATE_ERROR,
+    payload,
   };
 }

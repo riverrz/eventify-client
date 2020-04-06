@@ -1,12 +1,19 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import styled from "styled-components";
+import { bindActionCreators } from "redux";
+import { connect } from "react-redux";
+import { createStructuredSelector } from "reselect";
+import { pick } from "ramda";
+import * as actions from "modules/Auth/redux/actions";
+import { makeSelectAuthLoading } from "modules/Auth/redux/selectors";
 import Grid from "components/Grid";
 import Button from "components/Button";
+import Spinner from "components/Spinner";
 import theme from "theme";
 
 const data = [5, 10, 15, 20];
 
-function AddMoney({ className }) {
+function AddMoney({ className, walletUpdateRequest, loading }) {
   const [topUp, setTopUp] = useState(null);
   const selectHandler = useCallback(
     (value) => {
@@ -16,7 +23,7 @@ function AddMoney({ className }) {
   );
   return (
     <div className={className}>
-      <Grid cols={4} className="grid">
+      <Grid cols="auto-fit" className="grid">
         {data.map((value) => (
           <div
             key={value}
@@ -27,7 +34,12 @@ function AddMoney({ className }) {
           </div>
         ))}
       </Grid>
-      <Button>Proceed</Button>
+      {!loading && (
+        <Button onClick={() => topUp && walletUpdateRequest({ amt: topUp })}>
+          Proceed
+        </Button>
+      )}
+      {loading && <Spinner height={50} width={50} />}
     </div>
   );
 }
@@ -52,4 +64,11 @@ const StyledAddMoney = styled(AddMoney)`
   }
 `;
 
-export default StyledAddMoney;
+const mapStateToProps = createStructuredSelector({
+  loading: makeSelectAuthLoading(),
+});
+
+const mapDispatchToProps = (dispatch) =>
+  bindActionCreators(pick(["walletUpdateRequest"], actions), dispatch);
+
+export default connect(mapStateToProps, mapDispatchToProps)(StyledAddMoney);

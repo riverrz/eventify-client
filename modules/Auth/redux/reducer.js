@@ -6,13 +6,13 @@ const initialState = {
   data: {
     token: false,
     user: {},
-    participationTokens: {}
+    participationTokens: {},
   },
-  error: false
+  error: false,
 };
 
-export default function(state = initialState, { type, payload }) {
-  return produce(state, draft => {
+export default function (state = initialState, { type, payload }) {
+  return produce(state, (draft) => {
     switch (type) {
       case actionTypes.SIGNUP_REQUEST: {
         draft.loading = true;
@@ -61,6 +61,22 @@ export default function(state = initialState, { type, payload }) {
       case actionTypes.FETCH_PARTICIPATION_TOKEN_SUCCESS: {
         const { eventId, token } = payload;
         draft.data.participationTokens[eventId] = token;
+        break;
+      }
+
+      case actionTypes.WALLET_UPDATE_REQUEST: {
+        draft.loading = true;
+        break;
+      }
+      case actionTypes.WALLET_UPDATE_SUCCESS: {
+        draft.loading = false;
+        draft.error = false;
+        draft.data.user.balance = payload.balance;
+        break;
+      }
+      case actionTypes.WALLET_UPDATE_ERROR: {
+        draft.loading = false;
+        draft.error = true;
         break;
       }
     }
