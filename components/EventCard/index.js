@@ -23,13 +23,13 @@ const EventCard = ({ className, event }) => {
               <div>
                 <Icon size={25} icon={calendar} /> Start Date
               </div>
-              <div className="date">{new Date(startTimeStamp).toDateString()}</div>
+              <div className="date">{new Date(startTimeStamp).toLocaleString()}</div>
             </div>
             <div className="date-container">
               <div>
                 <Icon size={25} icon={calendar} /> End Date
               </div>
-              <div className="date">{new Date(endTimeStamp).toDateString()}</div>
+              <div className="date">{new Date(endTimeStamp).toLocaleString()}</div>
             </div>
           </Flex>
         </div>
