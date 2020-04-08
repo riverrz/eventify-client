@@ -57,13 +57,13 @@ export default function ({ submitHandler, open, next }) {
             required
           />
           <Field
-            type="date"
+            type="datetime-local"
             className="input-field"
             name="startTimeStamp"
             required
           />
           <Field
-            type="date"
+            type="datetime-local"
             className="input-field"
             name="endTimeStamp"
             required
