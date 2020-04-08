@@ -12,7 +12,7 @@ import theme from "theme";
 const initialValues = {
   title: "",
   description: "",
-  totalParticipantsAllowed: 0,
+  totalParticipantsAllowed: null,
   startTimeStamp: "",
   endTimeStamp: "",
   emailArr: [],
@@ -53,6 +53,7 @@ export default function ({ submitHandler, open, next }) {
             type="number"
             className="input-field"
             name="totalParticipantsAllowed"
+            placeholder="Enter number of participants (atleast 1)"
             required
           />
           <Field
