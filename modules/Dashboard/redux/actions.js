@@ -39,3 +39,22 @@ export function fetchAllEventsError(payload) {
     payload
   };
 }
+
+export function fetchModulesRequest(payload) {
+  return {
+    type: actionTypes.FETCH_MODULES_REQUEST,
+    payload
+  };
+}
+export function fetchModulesSuccess(payload) {
+  return {
+    type: actionTypes.FETCH_MODULES_SUCCESS,
+    payload
+  };
+}
+export function fetchModulesError(payload) {
+  return {
+    type: actionTypes.FETCH_MODULES_ERROR,
+    payload
+  };
+}

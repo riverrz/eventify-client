@@ -10,6 +10,11 @@ const initialState = {
     loading: false,
     error: false,
     data: {} // {createdEvents: [], invitedEvents: []}
+  },
+  modules: {
+    loading: false,
+    error: false,
+    data: []
   }
 };
 
@@ -46,6 +51,19 @@ export default function reducer(state = initialState, { type, payload }) {
         draft.events.loading = false;
         draft.events.error = true;
         break;
+      }
+      case actionTypes.FETCH_MODULES_REQUEST: {
+        draft.modules.loading = true;
+        draft.modules.error = false;
+      }
+      case actionTypes.FETCH_MODULES_SUCCESS: {
+        draft.modules.loading = false;
+        draft.modules.error = false;
+        draft.modules.data = payload;
+      }
+      case actionTypes.FETCH_MODULES_ERROR: {
+        draft.modules.loading = false;
+        draft.modules.error = true;
       }
     }
   });

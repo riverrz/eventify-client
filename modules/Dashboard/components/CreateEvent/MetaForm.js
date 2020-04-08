@@ -30,10 +30,9 @@ export default function ({ submitHandler, open, next }) {
   return (
     <Formik
       initialValues={initialValues}
-      onSubmit={(values, { resetForm }) => {
+      onSubmit={(values) => {
         submitHandler(values);
         next();
-        resetForm();
       }}
     >
       {(props) => (

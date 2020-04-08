@@ -1,7 +1,7 @@
 import { createSelector } from "reselect";
 import { path } from "ramda";
 
-const selectDashboard = state => state.dashboard;
+const selectDashboard = (state) => state.dashboard;
 
 export const makeSelectAllEvents = () =>
   createSelector(selectDashboard, path(["events", "data"]));
@@ -11,3 +11,6 @@ export const makeSelectInvitedEvents = () =>
 
 export const makeSelectCreatedEvents = () =>
   createSelector(selectDashboard, path(["events", "data", "createdEvents"]));
+
+export const makeSelectModules = () =>
+  createSelector(selectDashboard, path(["modules", "data"]));

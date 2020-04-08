@@ -5,21 +5,37 @@ import { createStructuredSelector } from "reselect";
 import { pick, path } from "ramda";
 import { bindActionCreators } from "redux";
 import * as actions from "modules/Dashboard/redux/actions";
+import { makeSelectModules } from "modules/Dashboard/redux/selectors";
 import Spinner from "components/Spinner";
 import MetaForm from "./MetaForm";
+import ModuleForm from "./ModuleForm";
 
-const CreateEvent = ({ className, createEventRequest, loading }) => {
+const CreateEvent = ({
+  className,
+  createEventRequest,
+  loading,
+  fetchModulesRequest,
+  modulesLoading,
+  modules,
+}) => {
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState({});
+
   const formDataHandler = useCallback((values) => {
     setFormData({ ...formData, ...values });
-  }, []);
+  }, [formData]);
+
   useEffect(() => {
-    if (step > 1) {
+    if (step > 2) {
       createEventRequest(formData);
       setStep(1);
     }
   }, [step]);
+
+  useEffect(() => {
+    fetchModulesRequest();
+  }, []);
+
   return (
     <main className={className}>
       <h2>Create an event</h2>
@@ -28,6 +44,15 @@ const CreateEvent = ({ className, createEventRequest, loading }) => {
           open={step === 1}
           next={() => setStep(2)}
           submitHandler={formDataHandler}
+        />
+      )}
+      {!loading && (
+        <ModuleForm
+          open={step === 2}
+          next={() => setStep(3)}
+          submitHandler={formDataHandler}
+          modulesLoading={modulesLoading}
+          modules={modules}
         />
       )}
       {loading && <Spinner />}
@@ -72,9 +97,14 @@ const StyledCreateEvent = styled(CreateEvent)`
 
 const mapStateToProps = createStructuredSelector({
   loading: path(["dashboard", "createEvent", "loading"]),
+  modulesLoading: path(["dashboard", "modules", "loading"]),
+  modules: makeSelectModules(),
 });
 
 const mapDispatchToProps = (dispatch) =>
-  bindActionCreators(pick(["createEventRequest"], actions), dispatch);
+  bindActionCreators(
+    pick(["createEventRequest", "fetchModulesRequest"], actions),
+    dispatch
+  );
 
 export default connect(mapStateToProps, mapDispatchToProps)(StyledCreateEvent);
