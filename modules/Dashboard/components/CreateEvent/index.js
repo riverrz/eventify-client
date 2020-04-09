@@ -93,6 +93,13 @@ const StyledCreateEvent = styled(CreateEvent)`
       margin-top: 2rem;
     }
   }
+
+  @media only screen and (max-width: 768px) {
+    .form {
+      width: 85%;
+      margin-bottom: 5rem;
+    }
+  }
 `;
 
 const mapStateToProps = createStructuredSelector({
