@@ -12,7 +12,7 @@ import theme from "theme";
 const initialValues = {
   title: "",
   description: "",
-  totalParticipantsAllowed: null,
+  totalParticipantsAllowed: "",
   startTimeStamp: "",
   endTimeStamp: "",
   emailArr: [],
