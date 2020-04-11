@@ -19,18 +19,23 @@ const CreateEvent = ({
   modules,
 }) => {
   const [step, setStep] = useState(1);
+  const [canCreateEvent, setCanCreateEvent] = useState(false);
   const [formData, setFormData] = useState({});
 
-  const formDataHandler = useCallback((values) => {
-    setFormData({ ...formData, ...values });
-  }, [formData]);
+  const formDataHandler = useCallback(
+    (values) => {
+      setFormData({ ...formData, ...values });
+    },
+    [formData]
+  );
 
   useEffect(() => {
-    if (step > 2) {
+    if (canCreateEvent) {
       createEventRequest(formData);
       setStep(1);
+      formData({});
     }
-  }, [step]);
+  }, [canCreateEvent]);
 
   useEffect(() => {
     fetchModulesRequest();
@@ -53,8 +58,7 @@ const CreateEvent = ({
           next={() => setStep(3)}
           back={() => setStep(1)}
           submitHandler={formDataHandler}
-          modulesLoading={modulesLoading}
-          modules={modules}
+          createEvent={() => setCanCreateEvent(true)}
         />
       )}
       {loading && <Spinner />}

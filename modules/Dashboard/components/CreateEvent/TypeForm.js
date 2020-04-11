@@ -7,15 +7,27 @@ import theme from "theme";
 
 const types = ["Websocket Based", "Generic", "Contentful"];
 
-function ModuleForm({ submitHandler, open, next, className, back }) {
+function ModuleForm({
+  submitHandler,
+  open,
+  next,
+  className,
+  back,
+  initalType = null,
+  createEvent,
+}) {
   if (!open) {
     return null;
   }
-  const [selectedType, setSelectedType] = useState(null);
+  const [selectedType, setSelectedType] = useState(initalType);
 
   const handleSubmit = useCallback(() => {
     submitHandler({ type: selectedType });
-    next();
+    if (selectedType === "Generic") {
+      createEvent();
+    } else {
+      next();
+    }
   }, [selectedType, submitHandler]);
 
   return (
@@ -43,7 +55,7 @@ function ModuleForm({ submitHandler, open, next, className, back }) {
         Back
       </Button>
       <Button className="btn" onClick={handleSubmit}>
-        {selectedType === "Generic" ? 'Submit' : 'Next'}
+        {selectedType === "Generic" ? "Submit" : "Next"}
       </Button>
     </div>
   );
