@@ -1,74 +1,40 @@
 import styled from "styled-components";
 import { useState, useCallback } from "react";
-import { reject, equals } from "ramda";
 import Grid from "components/Grid";
 import Button from "components/Button";
 import Card from "components/Card";
 import theme from "theme";
 
-function ModuleForm({
-  submitHandler,
-  open,
-  next,
-  className,
-  modulesLoading,
-  modules,
-  back,
-}) {
+const types = ["Websocket Based", "Generic", "Contentful"];
+
+function ModuleForm({ submitHandler, open, next, className, back }) {
   if (!open) {
     return null;
   }
-  const [selectedModules, setSelectedModules] = useState([]);
-  const [genericEvent, setGenericEvent] = useState(false);
+  const [selectedType, setSelectedType] = useState(null);
 
   const handleSubmit = useCallback(() => {
-    submitHandler({ modules: selectedModules });
+    submitHandler({ type: selectedType });
     next();
-  }, [selectedModules, setSelectedModules]);
-
-  const handleModuleSelection = useCallback(
-    (value) => {
-      let newSelectedModules = [];
-      if (selectedModules.includes(value)) {
-        newSelectedModules = reject(equals(value), selectedModules);
-      } else {
-        newSelectedModules = newSelectedModules.concat(value);
-      }
-      setSelectedModules(newSelectedModules);
-    },
-    [selectedModules, setSelectedModules]
-  );
+  }, [selectedType, submitHandler]);
 
   return (
     <div className={className}>
-      {!modulesLoading && modules && (
-        <Grid className="grid">
-          {modules.map(({ name, moduleId }) => {
+      {
+        <Grid cols="auto-fit" className="grid">
+          {types.map((type) => {
             return (
               <Card
-                key={moduleId}
-                active={selectedModules.includes(moduleId)}
-                disabled={genericEvent}
-                onClick={() => !genericEvent && handleModuleSelection(moduleId)}
+                key={type}
+                active={selectedType === type}
+                onClick={() => setSelectedType(type)}
               >
-                {name}
+                {type}
               </Card>
             );
           })}
         </Grid>
-      )}
-      <p>
-        <input
-          type="checkbox"
-          name="isGeneric"
-          id="generic"
-          onChange={() => {
-            setGenericEvent(!genericEvent);
-            setSelectedModules([]);
-          }}
-        />
-        <label htmlFor="generic">Create it as a generic event instead</label>
-      </p>
+      }
       <Button
         className="btn"
         backgroundColor={theme.primaryDark}
@@ -77,7 +43,7 @@ function ModuleForm({
         Back
       </Button>
       <Button className="btn" onClick={handleSubmit}>
-        Submit
+        {selectedType === "Generic" ? 'Submit' : 'Next'}
       </Button>
     </div>
   );
@@ -88,13 +54,6 @@ export default styled(ModuleForm)`
   text-align: center;
   .grid {
     margin-bottom: 2rem;
-  }
-
-  p input {
-    vertical-align: middle;
-  }
-  p label {
-    vertical-align: middle;
   }
   .btn {
     margin: 20px;
