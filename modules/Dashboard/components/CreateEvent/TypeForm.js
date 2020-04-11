@@ -3,6 +3,7 @@ import { useState, useCallback } from "react";
 import { reject, equals } from "ramda";
 import Grid from "components/Grid";
 import Button from "components/Button";
+import Card from "components/Card";
 import theme from "theme";
 
 function ModuleForm({
@@ -12,7 +13,7 @@ function ModuleForm({
   className,
   modulesLoading,
   modules,
-  back
+  back,
 }) {
   if (!open) {
     return null;
@@ -40,25 +41,18 @@ function ModuleForm({
 
   return (
     <div className={className}>
-      {!modulesLoading && modules &&  (
+      {!modulesLoading && modules && (
         <Grid className="grid">
           {modules.map(({ name, moduleId }) => {
-            const classes = ["card"];
-            if (selectedModules.includes(moduleId)) {
-              classes.push("active");
-            }
-            if (genericEvent) {
-              classes.push("disabled");
-            }
-
             return (
-              <div
+              <Card
                 key={moduleId}
-                className={classes.join(" ")}
+                active={selectedModules.includes(moduleId)}
+                disabled={genericEvent}
                 onClick={() => !genericEvent && handleModuleSelection(moduleId)}
               >
                 {name}
-              </div>
+              </Card>
             );
           })}
         </Grid>
@@ -75,8 +69,16 @@ function ModuleForm({
         />
         <label htmlFor="generic">Create it as a generic event instead</label>
       </p>
-      <Button className="btn" backgroundColor={theme.primaryDark} onClick={back}>Back</Button>
-      <Button className="btn" onClick={handleSubmit}>Submit</Button>
+      <Button
+        className="btn"
+        backgroundColor={theme.primaryDark}
+        onClick={back}
+      >
+        Back
+      </Button>
+      <Button className="btn" onClick={handleSubmit}>
+        Submit
+      </Button>
     </div>
   );
 }
@@ -86,23 +88,6 @@ export default styled(ModuleForm)`
   text-align: center;
   .grid {
     margin-bottom: 2rem;
-  }
-  .card {
-    background-color: #eee;
-    padding: 2% 5%;
-    transition: all 0.3s;
-    cursor: pointer;
-    text-align: center;
-  }
-  .card.disabled {
-    cursor: not-allowed;
-    background-color: #ddd;
-    color: #bbb;
-  }
-  .card:not(.disabled):hover,
-  .card.active {
-    background-color: ${theme.primaryDark};
-    color: #fff;
   }
 
   p input {
