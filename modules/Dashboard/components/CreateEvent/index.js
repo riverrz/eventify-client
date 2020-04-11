@@ -8,7 +8,7 @@ import * as actions from "modules/Dashboard/redux/actions";
 import { makeSelectModules } from "modules/Dashboard/redux/selectors";
 import Spinner from "components/Spinner";
 import MetaForm from "./MetaForm";
-import ModuleForm from "./ModuleForm";
+import TypeForm from "./TypeForm";
 
 const CreateEvent = ({
   className,
@@ -44,12 +44,14 @@ const CreateEvent = ({
           open={step === 1}
           next={() => setStep(2)}
           submitHandler={formDataHandler}
+          initialValues={formData}
         />
       )}
       {!loading && (
-        <ModuleForm
+        <TypeForm
           open={step === 2}
           next={() => setStep(3)}
+          back={() => setStep(1)}
           submitHandler={formDataHandler}
           modulesLoading={modulesLoading}
           modules={modules}

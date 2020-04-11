@@ -1,4 +1,4 @@
-import { useCallback } from "react";
+import { useCallback, useMemo } from "react";
 import { Formik, Field } from "formik";
 import Files from "react-butterfiles";
 import TagsInput from "react-tagsinput";
@@ -9,7 +9,7 @@ import { ResponsiveFlex } from "components/Flex";
 import { emailRegex } from "lib/validations/regex";
 import theme from "theme";
 
-const initialValues = {
+const defaultInitialValues = {
   title: "",
   description: "",
   totalParticipantsAllowed: "",
@@ -19,7 +19,7 @@ const initialValues = {
   banner: {},
 };
 
-export default function ({ submitHandler, open, next }) {
+export default function ({ submitHandler, open, next, initialValues = {} }) {
   if (!open) {
     return null;
   }
@@ -27,9 +27,13 @@ export default function ({ submitHandler, open, next }) {
     () => cogoToast.error("Please enter a valid email"),
     []
   );
+  const initValues = useMemo(
+    () => ({ ...defaultInitialValues, ...initialValues }),
+    [initialValues]
+  );
   return (
     <Formik
-      initialValues={initialValues}
+      initialValues={initValues}
       onSubmit={(values) => {
         submitHandler(values);
         next();

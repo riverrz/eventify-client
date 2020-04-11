@@ -12,6 +12,7 @@ function ModuleForm({
   className,
   modulesLoading,
   modules,
+  back
 }) {
   if (!open) {
     return null;
@@ -39,8 +40,8 @@ function ModuleForm({
 
   return (
     <div className={className}>
-      {!modulesLoading && (
-        <Grid cols="auto-fit" className="grid">
+      {!modulesLoading && modules &&  (
+        <Grid className="grid">
           {modules.map(({ name, moduleId }) => {
             const classes = ["card"];
             if (selectedModules.includes(moduleId)) {
@@ -74,7 +75,8 @@ function ModuleForm({
         />
         <label htmlFor="generic">Create it as a generic event instead</label>
       </p>
-      <Button onClick={handleSubmit}>Submit</Button>
+      <Button className="btn" backgroundColor={theme.primaryDark} onClick={back}>Back</Button>
+      <Button className="btn" onClick={handleSubmit}>Submit</Button>
     </div>
   );
 }
@@ -108,5 +110,8 @@ export default styled(ModuleForm)`
   }
   p label {
     vertical-align: middle;
+  }
+  .btn {
+    margin: 20px;
   }
 `;
