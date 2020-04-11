@@ -29,6 +29,7 @@ export default styled(SideDrawer)`
   position: fixed;
   top:0;
   left: 0;
+  z-index: 100;
   transition: width ease-in-out 0.3s;
   width: 4rem;
   .list {

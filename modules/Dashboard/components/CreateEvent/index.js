@@ -9,6 +9,7 @@ import { makeSelectModules } from "modules/Dashboard/redux/selectors";
 import Spinner from "components/Spinner";
 import MetaForm from "./MetaForm";
 import TypeForm from "./TypeForm";
+import Contentful from "./Contentful";
 
 const CreateEvent = ({
   className,
@@ -18,7 +19,7 @@ const CreateEvent = ({
   modulesLoading,
   modules,
 }) => {
-  const [step, setStep] = useState(1);
+  const [step, setStep] = useState(3);
   const [canCreateEvent, setCanCreateEvent] = useState(false);
   const [formData, setFormData] = useState({});
 
@@ -61,7 +62,13 @@ const CreateEvent = ({
         submitHandler={formDataHandler}
         createEvent={() => setCanCreateEvent(true)}
       />
-      
+      <Contentful
+        open={step === 3}
+        next={() => setStep(4)}
+        back={() => setStep(2)}
+        submitHandler={formDataHandler}
+        createEvent={() => setCanCreateEvent(true)}
+      />
     </main>
   );
 };
