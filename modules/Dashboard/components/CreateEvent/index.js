@@ -41,27 +41,27 @@ const CreateEvent = ({
     fetchModulesRequest();
   }, []);
 
+  if (loading) {
+    return <Spinner />;
+  }
+
   return (
     <main className={className}>
       <h2>Create an event</h2>
-      {!loading && (
-        <MetaForm
-          open={step === 1}
-          next={() => setStep(2)}
-          submitHandler={formDataHandler}
-          initialValues={formData}
-        />
-      )}
-      {!loading && (
-        <TypeForm
-          open={step === 2}
-          next={() => setStep(3)}
-          back={() => setStep(1)}
-          submitHandler={formDataHandler}
-          createEvent={() => setCanCreateEvent(true)}
-        />
-      )}
-      {loading && <Spinner />}
+      <MetaForm
+        open={step === 1}
+        next={() => setStep(2)}
+        submitHandler={formDataHandler}
+        initialValues={formData}
+      />
+      <TypeForm
+        open={step === 2}
+        next={() => setStep(3)}
+        back={() => setStep(1)}
+        submitHandler={formDataHandler}
+        createEvent={() => setCanCreateEvent(true)}
+      />
+      
     </main>
   );
 };
