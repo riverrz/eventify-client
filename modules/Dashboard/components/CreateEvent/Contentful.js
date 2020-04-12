@@ -3,14 +3,13 @@ import styled from "styled-components";
 import Question from "components/Question";
 import Button from "components/Button";
 
-const Contentful = ({ className, submitHandler, open }) => {
+const Contentful = ({ className, submitHandler, open, createEvent }) => {
   if (!open) {
     return null;
   }
   const inputRef = useRef(null);
   const [content, setContent] = useState({});
-  const [noOfQuestions, setNoOfQuestions] = useState(2);
-  console.log(content);
+  const [noOfQuestions, setNoOfQuestions] = useState(null);
   return (
     <div className={className}>
       {!Boolean(noOfQuestions) && (
@@ -34,11 +33,20 @@ const Contentful = ({ className, submitHandler, open }) => {
               <Question
                 key={i}
                 index={i + 1}
-                submitValues={(values) => setContent({ ...content, [i + 1]: values })}
+                submitValues={(values) =>
+                  setContent({ ...content, [i + 1]: values })
+                }
               />
             );
           })}
-          <Button onClick={() => submitHandler(content)}>Create</Button>
+          <Button
+            onClick={() => {
+              submitHandler({ content });
+              createEvent();
+            }}
+          >
+            Create
+          </Button>
         </Fragment>
       )}
     </div>

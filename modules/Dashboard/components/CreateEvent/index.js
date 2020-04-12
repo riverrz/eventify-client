@@ -19,7 +19,7 @@ const CreateEvent = ({
   modulesLoading,
   modules,
 }) => {
-  const [step, setStep] = useState(3);
+  const [step, setStep] = useState(1);
   const [canCreateEvent, setCanCreateEvent] = useState(false);
   const [formData, setFormData] = useState({});
 
@@ -34,7 +34,7 @@ const CreateEvent = ({
     if (canCreateEvent) {
       createEventRequest(formData);
       setStep(1);
-      formData({});
+      setFormData({});
     }
   }, [canCreateEvent]);
 
