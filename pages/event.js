@@ -32,8 +32,8 @@ DashboardPage.getInitialProps = async ({ ctx: { query } }) => {
 };
 
 const transformations = {
-  startTimeStamp: date => new Date(date).toDateString(),
-  endTimeStamp: date => new Date(date).toDateString()
+  startTimeStamp: date => new Date(date).toLocaleString(),
+  endTimeStamp: date => new Date(date).toLocaleString()
 }
 
 const evolveEvent = evolve(transformations);
