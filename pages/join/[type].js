@@ -8,20 +8,25 @@ import * as actions from "modules/Auth/redux/actions";
 import { makeSelectLoggedIn } from "modules/Auth/redux/selectors";
 
 const AuthPage = ({ router, signUpRequest, isLoggedIn, loading }) => {
+  const type = router.query.type || "register";
   if (isLoggedIn) {
-    cogoToast.success("You have successfully logged in");
+    const message =
+      type === "register"
+        ? "You have successfully registered with us!"
+        : "You have successfully logged in";
+    cogoToast.success(message);
     router.push("/");
     return null;
   }
-  return <Auth type="login" signUpRequest={signUpRequest} loading={loading} />;
+  return <Auth type={type} signUpRequest={signUpRequest} loading={loading} />;
 };
 
 const mapStateToProps = createStructuredSelector({
   isLoggedIn: makeSelectLoggedIn(),
-  loading: path(["auth", "loading"])
+  loading: path(["auth", "loading"]),
 });
 
-const mapDispatchToProps = dispatch =>
+const mapDispatchToProps = (dispatch) =>
   bindActionCreators(pick(["signUpRequest"], actions), dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(AuthPage);
