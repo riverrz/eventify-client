@@ -45,9 +45,21 @@ export const fetchUserError = (payload) => {
   };
 };
 
-export function fetchTokenSuccess(payload) {
+export function fetchParticipationTokenRequest(payload) {
+  return {
+    type: actionTypes.FETCH_PARTICIPATION_TOKEN_REQUEST,
+    payload,
+  };
+}
+export function fetchParticipationTokenSuccess(payload) {
   return {
     type: actionTypes.FETCH_PARTICIPATION_TOKEN_SUCCESS,
+    payload,
+  };
+}
+export function fetchParticipationTokenError(payload) {
+  return {
+    type: actionTypes.FETCH_PARTICIPATION_TOKEN_ERROR,
     payload,
   };
 }

@@ -1,80 +1,63 @@
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useCallback } from "react";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import { createStructuredSelector } from "reselect";
 import { pick, merge } from "ramda";
-import cogoToast from "cogo-toast";
 import Button from "components/Button";
 import Spinner from "components/Spinner";
 import { makeSelectParticipationTokens } from "modules/Auth/redux/selectors";
 import * as authActions from "modules/Auth/redux/actions";
 import * as eventActions from "modules/Event/redux/actions";
 import theme from "theme";
-import request from "lib/request";
-import config from "config/env";
-
 const EventAction = ({
   event: { eventId, title },
   participationTokens,
-  fetchTokenSuccess,
-  pariticipateRequest
+  fetchParticipationTokenRequest,
+  pariticipateRequest,
+  fetchTokenLoading,
 }) => {
-  const [loading, setLoading] = useState(false);
-
-  // fetch token logic
-  const fetchToken = useCallback(async () => {
-    try {
-      if (!participationTokens[eventId]) {
-        setLoading(true);
-        const token = await request(
-          `${config.apiUrl}/token?eventId=${eventId}`
-        );
-        setLoading(false);
-        fetchTokenSuccess(token);
-      }
-    } catch (error) {
-      cogoToast.error(
-        "Some error occurred while fetching the participation token. Please try again later!"
-      );
-      setLoading(false);
-    }
-  }, [eventId, participationTokens]);
-
   // fetch token when component did mount
   useEffect(() => {
-    fetchToken();
+    fetchParticipationTokenRequest(eventId);
   }, []);
 
   // btn click handler
   const handleClick = useCallback(() => {
     const token = participationTokens[eventId];
     if (token) {
-      setLoading(true);
-      setTimeout(() => {
-        setLoading(false);
-      }, 500);
       pariticipateRequest({ token, title });
     }
   }, [participationTokens, eventId, title]);
+
+  const loading = fetchTokenLoading;
   return (
-    <Button onClick={handleClick} backgroundColor={theme.primaryGreen}>
-      {loading ? (
-        <Spinner type="TailSpin" color="#fff" height={20} width={20} />
-      ) : (
-        "Participate"
+    <>
+      {loading && (
+        <Spinner
+          type="TailSpin"
+          color={theme.primaryGreen}
+          height={50}
+          width={50}
+        />
       )}
-    </Button>
+      {!loading && (
+        <Button onClick={handleClick} backgroundColor={theme.primaryGreen}>
+          Participate
+        </Button>
+      )}
+    </>
   );
 };
 
 const mapStateToProps = createStructuredSelector({
-  participationTokens: makeSelectParticipationTokens()
+  participationTokens: makeSelectParticipationTokens(),
+  fetchTokenLoading: (state) => state.auth.fetchedToken.loading,
 });
 
-const mapDispatchToProps = dispatch =>
+const mapDispatchToProps = (dispatch) =>
   bindActionCreators(
     merge(
-      pick(["fetchTokenSuccess"], authActions),
+      pick(["fetchParticipationTokenRequest"], authActions),
       pick(["pariticipateRequest"], eventActions)
     ),
     dispatch

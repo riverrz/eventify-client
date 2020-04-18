@@ -9,6 +9,11 @@ const initialState = {
     participationTokens: {},
   },
   error: false,
+  fetchedToken: {
+    loading: false,
+    error: false,
+    token: "",
+  },
 };
 
 export default function (state = initialState, { type, payload }) {
@@ -58,9 +63,22 @@ export default function (state = initialState, { type, payload }) {
         draft.data = Object.assign({}, initialState.data);
         break;
       }
+      case actionTypes.FETCH_PARTICIPATION_TOKEN_REQUEST: {
+        draft.fetchedToken.loading = true;
+        draft.fetchedToken.error = false;
+        break;
+      }
       case actionTypes.FETCH_PARTICIPATION_TOKEN_SUCCESS: {
         const { eventId, token } = payload;
         draft.data.participationTokens[eventId] = token;
+        draft.fetchedToken.loading = false;
+        draft.fetchedToken.error = false;
+        draft.fetchedToken.token = token;
+        break;
+      }
+      case actionTypes.FETCH_PARTICIPATION_TOKEN_ERROR: {
+        draft.fetchedToken.loading = false;
+        draft.fetchedToken.error = true;
         break;
       }
 

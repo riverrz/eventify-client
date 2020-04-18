@@ -4,13 +4,16 @@ import {
   SIGNUP_REQUEST,
   LOGOUT_SUCCESS,
   WALLET_UPDATE_REQUEST,
-} from "modules/Auth/redux/constants";
+  FETCH_PARTICIPATION_TOKEN_REQUEST,
+} from "./constants";
 import {
   signUpSuccess,
   signUpError,
   walletUpdateSuccess,
   walletUpdateError,
-} from "modules/Auth/redux/actions";
+  fetchParticipationTokenSuccess,
+  fetchParticipationTokenError,
+} from "./actions";
 import { makeSelectBalance } from "./selectors";
 
 import config from "config/env";
@@ -64,8 +67,23 @@ function* walletUpdateSaga({ payload }) {
   }
 }
 
+function* fetchParticipationTokenSaga({ payload }) {
+  try {
+    const requestUrl = `${config.apiUrl}/token?eventId=${payload}`;
+    const token = yield call(request, requestUrl);
+    yield put(fetchParticipationTokenSuccess(token));
+  } catch (error) {
+    console.log(error);
+    cogoToast.error(
+      "Some error occurred while fetching the participation token. Please try again later!"
+    );
+    yield put(fetchParticipationTokenError());
+  }
+}
+
 export default [
   takeLatest(SIGNUP_REQUEST, signupSaga),
   takeEvery(LOGOUT_SUCCESS, logoutSuccess),
   takeLatest(WALLET_UPDATE_REQUEST, walletUpdateSaga),
+  takeEvery(FETCH_PARTICIPATION_TOKEN_REQUEST, fetchParticipationTokenSaga),
 ];
