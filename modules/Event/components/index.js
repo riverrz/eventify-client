@@ -6,7 +6,7 @@ import { ResponsiveFlex } from "components/Flex";
 import EventAction from "modules/Event/components/EventAction";
 import config from "config/env";
 
-const Event = ({ className, data }) => {
+const Event = ({ className, data, isLoggedIn }) => {
   if (isEmpty(data)) {
     return null;
   }
@@ -16,7 +16,7 @@ const Event = ({ className, data }) => {
     banner,
     startTimeStamp,
     endTimeStamp,
-    creator: { username, email }
+    creator: { username, email },
   } = data;
   return (
     <main className={className}>
@@ -40,7 +40,7 @@ const Event = ({ className, data }) => {
               <Icon icon={envelope} size={15} />
             </a>
           </p>
-          <EventAction event={data} />
+          {isLoggedIn && <EventAction event={data} />}
         </section>
       </ResponsiveFlex>
     </main>
