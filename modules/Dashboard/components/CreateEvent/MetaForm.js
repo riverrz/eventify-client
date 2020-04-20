@@ -17,6 +17,7 @@ const defaultInitialValues = {
   endTimeStamp: "",
   emailArr: [],
   banner: {},
+  duration: "",
 };
 
 export default function ({ submitHandler, open, next, initialValues = {} }) {
@@ -44,20 +45,20 @@ export default function ({ submitHandler, open, next, initialValues = {} }) {
           <Field
             name="title"
             className="input-field"
-            placeholder="Enter title of your event"
+            placeholder="*Enter title of your event"
             required
           />
           <Field
             name="description"
             className="input-field"
-            placeholder="Enter description of your event"
+            placeholder="*Enter description of your event"
             required
           />
           <Field
             type="number"
             className="input-field"
             name="totalParticipantsAllowed"
-            placeholder="Enter number of participants (atleast 1)"
+            placeholder="*Enter number of participants (atleast 1)"
             required
           />
           <Field
@@ -72,6 +73,11 @@ export default function ({ submitHandler, open, next, initialValues = {} }) {
             name="endTimeStamp"
             required
           />
+          <Field
+            name="duration"
+            type="number"
+            placeholder="Enter duration of the event in minutes"
+          />
           <Field name="emailArr" required>
             {({ field, form }) => (
               <TagsInput
@@ -79,7 +85,7 @@ export default function ({ submitHandler, open, next, initialValues = {} }) {
                 onlyUnique
                 validationRegex={emailRegex}
                 inputProps={{
-                  placeholder: "Enter participants' email addresses",
+                  placeholder: "*Enter participants' email addresses",
                 }}
                 onValidationReject={validationErrorMessage}
                 onChange={(x) => form.setFieldValue("emailArr", x)}
