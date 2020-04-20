@@ -76,6 +76,7 @@ export default function ({ submitHandler, open, next, initialValues = {} }) {
           <Field
             name="duration"
             type="number"
+            className="input-field"
             placeholder="Enter duration of the event in minutes"
           />
           <Field name="emailArr" required>
