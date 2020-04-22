@@ -59,7 +59,7 @@ const EventAction = ({
         </Button>
       )}
       {hasParticipated && (
-        <Link href={`/start/${eventId}`}>
+        <Link href={`/live/${eventId}`}>
           <Button>Start</Button>
         </Link>
       )}
