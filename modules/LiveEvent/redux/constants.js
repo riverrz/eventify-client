@@ -1,0 +1,3 @@
+export const LIVE_EVENT_START = "LIVE_EVENT_START";
+export const LIVE_EVENT_END = "LIVE_EVENT_END";
+
