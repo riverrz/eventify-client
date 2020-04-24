@@ -2,20 +2,20 @@ import { connect } from "react-redux";
 import { prop, evolve } from "ramda";
 import { createStructuredSelector } from "reselect";
 import { makeSelectLoggedIn } from "modules/Auth/redux/selectors";
+import LiveEvent from "modules/LiveEvent/components";
 import config from "config/env";
 
 const LiveEventPage = ({ isLoggedIn, event }) => {
-  console.log(event);
-  return <div>Started Event</div>;
+  return <LiveEvent event={event} />;
 };
 
 LiveEventPage.getInitialProps = async ({ ctx: { query } }) => {
   try {
-    const eventId = prop("id", query);
+    const eventId = prop("eventId", query);
     const event = await fetch(`${config.apiUrl}/event/${eventId}`).then((res) =>
       res.json()
     );
-    return { event: evolveEvent(event) };
+    return { event: event };
   } catch (error) {
     console.log(error);
   }

@@ -1,10 +1,15 @@
 import styled from "styled-components";
+import { bindActionCreators } from "redux";
+import { connect } from "react-redux";
+import { pick } from "ramda";
+import * as actions from "modules/LiveEvent/redux/actions";
+import Button from "components/Button";
 
 const milliSecondsToMinutes = (duration) => duration / 60 / 1000;
 
-function LiveEvent({ className, event }) {
-  const { startTimeStamp, endTimeStamp, duration, type } = event;
-
+function LiveEvent({ className, event, startEvent }) {
+  const { startTimeStamp, endTimeStamp, duration, type, eventId } = event;
+  console.log(startTimeStamp);
   return (
     <main className={className}>
       <p className="instructions">
@@ -16,11 +21,11 @@ function LiveEvent({ className, event }) {
           </li>
           <li>
             This event started at{" "}
-            <strong>{startTimeStamp.getLocaleString()}</strong>
+            {/* <strong>{new Date(startTimeStamp).getLocaleString()}</strong> */}
           </li>
           <li>
             This event will end at{" "}
-            <strong>{endTimeStamp.getLocaleString()}</strong>
+            {/* <strong>{new Date(endTimeStamp).getLocaleString()}</strong> */}
           </li>
 
           <li>
@@ -30,7 +35,7 @@ function LiveEvent({ className, event }) {
           <li>
             <strong>
               However, the event will terminate at{" "}
-              {endTimeStamp.getLocaleString()} even if you have some minutes
+              {/* {endTimeStamp.getLocaleString()} even if you have some minutes */}
               left!
             </strong>
           </li>
@@ -38,11 +43,12 @@ function LiveEvent({ className, event }) {
           <li>Best of luck!</li>
         </ul>
       </p>
+      <Button onClick={() => startEvent(eventId)}>Start</Button>
     </main>
   );
 }
 
-export default styled(LiveEvent)`
+const StyledLiveEvent = styled(LiveEvent)`
   font-size: 1.3rem;
 
   .instructions {
@@ -53,3 +59,8 @@ export default styled(LiveEvent)`
     }
   }
 `;
+
+const mapDispatchToProps = (dispatch) =>
+  bindActionCreators(pick(["startEvent"], actions), dispatch);
+
+export default connect(null, mapDispatchToProps)(StyledLiveEvent);

@@ -1,3 +1,7 @@
-export const LIVE_EVENT_START = "LIVE_EVENT_START";
-export const LIVE_EVENT_END = "LIVE_EVENT_END";
+export const START_EVENT = "START_EVENT";
+export const END_EVENT = "END_EVENT";
 
+export const SOCKET_CONNECTED = "SOCKET_CONNECTED";
+export const SOCKET_DISCONNECTED = "SOCKET_DISCONNECTED";
+
+export const TIMER_SYNC = "TIMER_SYNC";
