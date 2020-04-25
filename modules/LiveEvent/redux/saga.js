@@ -11,7 +11,7 @@ import {
 } from "redux-saga/effects";
 import { eventChannel } from "redux-saga";
 
-import { START_EVENT, END_EVENT, TIMER_SYNC } from "./constants";
+import { START_EVENT, END_EVENT, TIMER_SYNC, TIMER_OVER } from "./constants";
 import {
   endEvent,
   socketConnected,
@@ -34,8 +34,9 @@ function buildSocketConnectionString(namespace) {
 
 function connect(namespace) {
   const connectionString = buildSocketConnectionString(namespace);
-  console.log(connectionString);
-  socket = io(connectionString);
+  if (!socket) {
+    socket = io(connectionString);
+  }
   return new Promise((resolve) => {
     socket.on("connect", () => {
       resolve(socket);
@@ -45,7 +46,9 @@ function connect(namespace) {
 
 function disconnect(namespace) {
   const connectionString = buildSocketConnectionString(namespace);
-  socket = io(connectionString);
+  if (!socket) {
+    socket = io(connectionString);
+  }
   return new Promise((resolve) => {
     socket.on("disconnect", () => {
       resolve(socket);
@@ -55,7 +58,9 @@ function disconnect(namespace) {
 
 function reconnect(namespace) {
   const connectionString = buildSocketConnectionString(namespace);
-  socket = io(connectionString);
+  if (!socket) {
+    socket = io(connectionString);
+  }
   return new Promise((resolve) => {
     socket.on("reconnect", () => {
       resolve(socket);
@@ -64,7 +69,7 @@ function reconnect(namespace) {
 }
 
 function* listenDisconnectSaga() {
-  const namespace = select(makeSelectNamespace());
+  const namespace = yield select(makeSelectNamespace());
   while (true) {
     yield call(disconnect, namespace);
     yield put(socketDisconnected());
@@ -72,8 +77,7 @@ function* listenDisconnectSaga() {
 }
 
 function* listenConnectSaga() {
-  const namespace = select(makeSelectNamespace());
-  console.log(namespace);
+  const namespace = yield select(makeSelectNamespace());
   while (true) {
     yield call(reconnect, namespace);
     yield put(socketConnected());
@@ -85,7 +89,11 @@ const createSocketChannel = (socket) =>
     const handleTimerSync = (data) => {
       emit(data);
     };
+    const handleTimerOver = () => {
+      emit(TIMER_OVER);
+    };
     socket.on(TIMER_SYNC, handleTimerSync);
+    socket.on(TIMER_OVER, handleTimerOver);
     return () => {
       socket.off(TIMER_SYNC, handleTimerSync);
     };
@@ -93,30 +101,34 @@ const createSocketChannel = (socket) =>
 
 function* listenServerSaga() {
   try {
-    console.log("inside saga");
-    const namespace = select(makeSelectNamespace());
-    const { timeout } = race({
-      connect: call(connect, namespace),
+    const namespace = yield select(makeSelectNamespace());
+    const { timeout, socket } = yield race({
+      socket: call(connect, namespace),
       timeout: delay(2000),
     });
     if (timeout) {
+      console.log("Timeout");
       yield put(socketDisconnected());
     }
-    const socket = yield call(connect, namespace);
     const socketChannel = yield call(createSocketChannel, socket);
     yield fork(listenConnectSaga);
     yield fork(listenDisconnectSaga);
     yield put(socketConnected());
     while (true) {
       const payload = yield take(socketChannel);
-      yield put(timerSync(payload));
+      if (payload === TIMER_OVER) {
+        console.log(payload);
+        break;
+      } else {
+        yield put(timerSync(payload));
+      }
     }
   } catch (error) {
     console.log(error);
   } finally {
+    console.log("Finally");
     if (yield cancelled()) {
       socket.disconnect(true);
-      yield put(endEvent());
     }
   }
 }
@@ -126,7 +138,7 @@ function* liveEventFlow() {
     const { payload } = yield take(START_EVENT);
     try {
       const requestUrl = `${config.apiUrl}/event/start/${payload}`;
-      const response = yield call(request, requestUrl, {
+      yield call(request, requestUrl, {
         method: "POST",
         body: JSON.stringify({
           timestamp: new Date(),
