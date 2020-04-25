@@ -9,10 +9,9 @@ const milliSecondsToMinutes = (duration) => duration / 60 / 1000;
 
 function LiveEvent({ className, event, startEvent }) {
   const { startTimeStamp, endTimeStamp, duration, type, eventId } = event;
-  console.log(startTimeStamp);
   return (
     <main className={className}>
-      <p className="instructions">
+      <div className="instructions">
         <h3>Following points to be noted:</h3>
         <ul>
           <li>
@@ -20,12 +19,10 @@ function LiveEvent({ className, event, startEvent }) {
             below.
           </li>
           <li>
-            This event started at{" "}
-            {/* <strong>{new Date(startTimeStamp).getLocaleString()}</strong> */}
+            This event started at <strong>{startTimeStamp}</strong>
           </li>
           <li>
-            This event will end at{" "}
-            {/* <strong>{new Date(endTimeStamp).getLocaleString()}</strong> */}
+            This event will end at <strong>{endTimeStamp}</strong>
           </li>
 
           <li>
@@ -34,16 +31,15 @@ function LiveEvent({ className, event, startEvent }) {
           </li>
           <li>
             <strong>
-              However, the event will terminate at{" "}
-              {/* {endTimeStamp.getLocaleString()} even if you have some minutes */}
-              left!
+              However, the event will terminate at {endTimeStamp} even if you
+              have some minutes left!
             </strong>
           </li>
 
           <li>Best of luck!</li>
         </ul>
-      </p>
-      <Button onClick={() => startEvent(eventId)}>Start</Button>
+        <Button onClick={() => startEvent(eventId)}>Start</Button>
+      </div>
     </main>
   );
 }
@@ -54,8 +50,13 @@ const StyledLiveEvent = styled(LiveEvent)`
   .instructions {
     background-color: #eee;
     padding: 1rem 2rem;
+    margin: 1rem 0;
     li {
       margin: 1rem;
+    }
+    button {
+      display: block;
+      margin: auto;
     }
   }
 `;
