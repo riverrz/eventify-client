@@ -6,4 +6,7 @@ const selectLiveEvent = (state) => state.liveEvent;
 const selectAuth = (state) => state.auth;
 
 export const makeSelectNamespace = () =>
-createSelector(selectAuth, path(["data", "user", "userId"]));
+  createSelector(selectAuth, path(["data", "user", "userId"]));
+
+export const makeSelectDuration = () =>
+  createSelector(selectLiveEvent, path(["data", "duration"]));
