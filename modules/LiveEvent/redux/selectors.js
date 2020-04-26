@@ -10,3 +10,6 @@ export const makeSelectNamespace = () =>
 
 export const makeSelectDuration = () =>
   createSelector(selectLiveEvent, path(["data", "duration"]));
+
+export const makeSelectDataBlob = () =>
+  createSelector(selectLiveEvent, path(["data", "blob"]));

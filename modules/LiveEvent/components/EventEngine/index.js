@@ -1,9 +1,9 @@
 import ContentfulEngine from "./ContentfulEngine";
 
-function EventEngine({ event, endEvent }) {
+function EventEngine({ event, endEvent, blob }) {
   const { type } = event;
   if (type === "Contentful") {
-    return <ContentfulEngine event={event} endEvent={endEvent} />;
+    return <ContentfulEngine event={event} endEvent={endEvent} blob={blob} />;
   }
 }
 

@@ -5,8 +5,15 @@ import { makeSelectDuration } from "modules/LiveEvent/redux/selectors";
 import Flex from "components/Flex";
 import convertMS from "utils/convertMS";
 
-function Timer({ className, duration }) {
-  const { days, hours, minutes, seconds } = convertMS(duration);
+function Timer({ className, duration, onFinish }) {
+  if (duration === -1) {
+    return null;
+  }
+  const timeObj = convertMS(duration);
+  if (Object.values(timeObj).every((val) => val === 0)) {
+    onFinish();
+  }
+  const { days, hours, minutes, seconds } = timeObj;
   return (
     <Flex className={className}>
       <div className="container">

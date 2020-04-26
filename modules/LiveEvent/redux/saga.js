@@ -17,6 +17,7 @@ import {
   socketConnected,
   socketDisconnected,
   timerSync,
+  contentfulEventData,
 } from "./actions";
 import { makeSelectNamespace } from "./selectors";
 import config from "config/env";
@@ -128,6 +129,7 @@ function* listenServerSaga() {
   } finally {
     console.log("Finally");
     if (yield cancelled()) {
+      console.log("Closed");
       socket.disconnect(true);
     }
   }
@@ -135,15 +137,22 @@ function* listenServerSaga() {
 
 function* liveEventFlow() {
   while (true) {
-    const { payload } = yield take(START_EVENT);
+    const {
+      payload: { eventId, type },
+    } = yield take(START_EVENT);
     try {
-      const requestUrl = `${config.apiUrl}/event/start/${payload}`;
-      yield call(request, requestUrl, {
+      const requestUrl = `${config.apiUrl}/event/start/${eventId}`;
+      const data = yield call(request, requestUrl, {
         method: "POST",
         body: JSON.stringify({
           timestamp: new Date(),
         }),
       });
+      if (type === "Contentful") {
+        const { content } = data;
+        // store the content in store
+        yield put(contentfulEventData(content));
+      }
 
       yield race({
         task: call(listenServerSaga),

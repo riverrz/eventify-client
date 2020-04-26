@@ -34,3 +34,10 @@ export function timerSync(payload) {
     payload,
   };
 }
+
+export function contentfulEventData(payload) {
+  return {
+    type: actionTypes.CONTENTFUL_EVENT_DATA,
+    payload,
+  };
+}
