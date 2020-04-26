@@ -21,7 +21,7 @@ class ContentfulEngine extends Component {
         <div className="container">
           {blob &&
             Object.entries(blob).map(([qNo, meta]) => {
-              return <RenderedQuestion key={qNo} data={meta} />;
+              return <RenderedQuestion key={qNo} data={meta} qNo={qNo} />;
             })}
         </div>
       </main>

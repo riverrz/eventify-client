@@ -1,13 +1,13 @@
 import styled from "styled-components";
 import { Formik, Field } from "formik";
 
-function RenderedQuestion({ className, data }) {
+function RenderedQuestion({ className, data, qNo }) {
   const { question, type, choices } = data;
   return (
     <div className={className}>
       <div
         className="question"
-        dangerouslySetInnerHTML={{ __html: `Q1. ${question}` }}
+        dangerouslySetInnerHTML={{ __html: `Q${qNo}. ${question}` }}
       />
       <Choices type={type} choices={choices} />
     </div>
