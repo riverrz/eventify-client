@@ -174,7 +174,7 @@ function* endEventSaga({ payload }) {
     const requestUrl = `${config.apiUrl}/event/end/${eventId}`;
     yield call(request, requestUrl, {
       method: "POST",
-      body: JSON.stringify(replies),
+      body: JSON.stringify({ replies }),
     });
     if (type === "Contentful") {
       cogoToast.success("Successfully submitted your answers!");
