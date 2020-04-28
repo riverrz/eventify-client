@@ -11,6 +11,7 @@ function RenderedQuestion({
   move,
   save,
   initialValues = {},
+  isLastQuestion,
 }) {
   const { question, type, choices } = data;
 
@@ -41,7 +42,7 @@ function RenderedQuestion({
             move(step + 1);
           }}
         >
-          Next
+          {isLastQuestion ? "Submit" : "Next"}
         </Button>
       </Flex>
     </div>

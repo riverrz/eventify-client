@@ -19,6 +19,7 @@ class ContentfulEngine extends Component {
       eventId,
       replies: this.state.data,
     });
+    this.props.router.push("/");
   };
   move = (step) => {
     this.setState({
@@ -26,7 +27,8 @@ class ContentfulEngine extends Component {
     });
   };
   componentDidUpdate() {
-    if (this.state.step > Object.keys(this.props.blob).length) {
+    const { totalQuestions } = this.props;
+    if (this.state.step > totalQuestions && totalQuestions > 0) {
       this.finishHandler();
     }
   }
@@ -43,16 +45,15 @@ class ContentfulEngine extends Component {
     });
   };
   render() {
-    const { className, blob } = this.props;
+    const { className, blob, totalQuestions } = this.props;
     const { step } = this.state;
-    const totalQuestions = blob && Object.keys(blob).length;
     return (
       <main className={className}>
         <div className="timer">
           <Timer onFinish={this.finishHandler} />
         </div>
         <div className="container">
-          {blob && step <= totalQuestions && (
+          {step <= totalQuestions && (
             <RenderedQuestion
               data={blob[step]}
               initialValues={
@@ -61,6 +62,7 @@ class ContentfulEngine extends Component {
               move={this.move}
               step={step}
               save={this.save}
+              isLastQuestion={step === totalQuestions}
             />
           )}
         </div>
