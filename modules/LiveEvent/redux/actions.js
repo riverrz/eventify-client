@@ -41,3 +41,17 @@ export function contentfulEventData(payload) {
     payload,
   };
 }
+
+export function eventDataSubmitSuccessful(payload) {
+  return {
+    type: actionTypes.EVENT_DATA_SUBMIT_SUCCESSFUL,
+    payload,
+  };
+}
+
+export function eventDataSubmitError(payload) {
+  return {
+    type: actionTypes.EVENT_DATA_SUBMIT_ERROR,
+    payload,
+  };
+}

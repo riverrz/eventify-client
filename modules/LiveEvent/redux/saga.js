@@ -1,4 +1,5 @@
 import io from "socket.io-client";
+import cogoToast from "cogo-toast";
 import {
   take,
   call,
@@ -8,6 +9,7 @@ import {
   fork,
   delay,
   select,
+  takeLatest,
 } from "redux-saga/effects";
 import { eventChannel } from "redux-saga";
 
@@ -18,6 +20,8 @@ import {
   socketDisconnected,
   timerSync,
   contentfulEventData,
+  eventDataSubmitSuccessful,
+  eventDataSubmitError,
 } from "./actions";
 import { makeSelectNamespace } from "./selectors";
 import config from "config/env";
@@ -164,4 +168,23 @@ function* liveEventFlow() {
   }
 }
 
-export default [liveEventFlow()];
+function* endEventSaga({ payload }) {
+  try {
+    const { type, replies, eventId } = payload;
+    const requestUrl = `${config.apiUrl}/event/end/${eventId}`;
+    yield call(request, requestUrl, {
+      method: "POST",
+      body: JSON.stringify(replies),
+    });
+    if (type === "Contentful") {
+      cogoToast.success("Successfully submitted your answers!");
+    }
+    cogoToast.success("Successfully exited the event!");
+    yield put(eventDataSubmitSuccessful());
+  } catch (error) {
+    cogoToast.error("Some Error occured while exiting the event");
+    yield put(eventDataSubmitError());
+  }
+}
+
+export default [liveEventFlow(), takeLatest(END_EVENT, endEventSaga)];

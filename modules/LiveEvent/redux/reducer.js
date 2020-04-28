@@ -21,6 +21,10 @@ export default function (state = initialState, { type, payload }) {
         draft.data.blob = payload;
         break;
       }
+      case actionTypes.EVENT_DATA_SUBMIT_SUCCESSFUL: {
+        draft.data = Object.assign({}, initialState.data);
+        break;
+      }
     }
   });
 }

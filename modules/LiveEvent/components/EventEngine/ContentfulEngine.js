@@ -3,6 +3,7 @@ import { Component } from "react";
 import { pick } from "ramda";
 import Timer from "components/Timer";
 import RenderedQuestion from "components/Question/RenderedQuestion";
+import { withRouter } from "next/router";
 
 class ContentfulEngine extends Component {
   state = {
@@ -12,7 +13,12 @@ class ContentfulEngine extends Component {
 
   finishHandler = () => {
     // event finished
-    this.props.endEvent(this.state.data);
+    const { type, eventId } = this.props.event;
+    this.props.endEvent({
+      type,
+      eventId,
+      replies: this.state.data,
+    });
   };
   move = (step) => {
     this.setState({
@@ -21,7 +27,7 @@ class ContentfulEngine extends Component {
   };
   componentDidUpdate() {
     if (this.state.step > Object.keys(this.props.blob).length) {
-      this.props.endEvent(this.state.data);
+      this.finishHandler();
     }
   }
   save = ({ values, step, type }) => {
@@ -63,7 +69,7 @@ class ContentfulEngine extends Component {
   }
 }
 
-export default styled(ContentfulEngine)`
+const StyledContentfulEngine = styled(ContentfulEngine)`
   position: relative;
   height: 100%;
   padding-top: 2rem;
@@ -73,3 +79,5 @@ export default styled(ContentfulEngine)`
     right: 3%;
   }
 `;
+
+export default withRouter(StyledContentfulEngine);
