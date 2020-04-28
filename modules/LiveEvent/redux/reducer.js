@@ -15,9 +15,11 @@ export default function (state = initialState, { type, payload }) {
     switch (type) {
       case actionTypes.TIMER_SYNC: {
         draft.data.duration = payload;
+        break;
       }
       case actionTypes.CONTENTFUL_EVENT_DATA: {
         draft.data.blob = payload;
+        break;
       }
     }
   });
