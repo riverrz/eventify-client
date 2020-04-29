@@ -10,7 +10,7 @@ import Instructions from "./Instructions";
 import EventEngine from "./EventEngine";
 
 function LiveEvent({ className, event, startEvent, endEvent, blob }) {
-  const [start, setStart] = useState(false);
+  const [start, setStart] = useState(event.type !== "Contentful");
   useEffect(() => {
     if (start) {
       startEvent({ eventId: event.eventId, type: event.type });
