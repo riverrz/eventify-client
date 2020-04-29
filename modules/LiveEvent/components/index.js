@@ -19,7 +19,6 @@ function LiveEvent({ className, event, startEvent, endEvent, blob }) {
   if (!start) {
     return <Instructions event={event} startHandler={() => setStart(true)} />;
   }
-  console.log(blob);
   return <EventEngine event={event} endEvent={endEvent} blob={blob} />;
 }
 

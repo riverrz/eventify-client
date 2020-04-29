@@ -163,6 +163,7 @@ function* liveEventFlow() {
         cancel: take(END_EVENT),
       });
     } catch (error) {
+      cogoToast.error(error.message);
       console.log("Failed to start the event");
     }
   }
