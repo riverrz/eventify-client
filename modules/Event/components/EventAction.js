@@ -5,7 +5,11 @@ import { createStructuredSelector } from "reselect";
 import { pick, merge, compose, prop, includes } from "ramda";
 import Button from "components/Button";
 import Spinner from "components/Spinner";
-import { makeSelectParticipationTokens, makeSelectUser } from "modules/Auth/redux/selectors";
+import Link from "components/Link";
+import {
+  makeSelectParticipationTokens,
+  makeSelectUser,
+} from "modules/Auth/redux/selectors";
 import * as authActions from "modules/Auth/redux/actions";
 import * as eventActions from "modules/Event/redux/actions";
 import theme from "theme";
@@ -16,7 +20,7 @@ const EventAction = ({
   fetchParticipationTokenRequest,
   pariticipateRequest,
   fetchTokenLoading,
-  userId
+  userId,
 }) => {
   // fetch token when component did mount
   useEffect(() => {
@@ -32,24 +36,32 @@ const EventAction = ({
   }, [participationTokens, eventId, title]);
 
   const hasParticipated = useMemo(() => {
-    return includes(userId, participants)
+    return includes(userId, participants);
   }, [participants]);
 
   const loading = fetchTokenLoading;
+
+  if (loading) {
+    return (
+      <Spinner
+        type="TailSpin"
+        color={theme.primaryGreen}
+        height={50}
+        width={50}
+      />
+    );
+  }
   return (
     <>
-      {loading && (
-        <Spinner
-          type="TailSpin"
-          color={theme.primaryGreen}
-          height={50}
-          width={50}
-        />
-      )}
-      {!loading && (
+      {!hasParticipated && (
         <Button onClick={handleClick} backgroundColor={theme.primaryGreen}>
-          {hasParticipated ? "Join" : "Participate"}
+          Participate
         </Button>
+      )}
+      {hasParticipated && (
+        <Link href={`/live/${eventId}`}>
+          <Button>Start</Button>
+        </Link>
       )}
     </>
   );
@@ -58,7 +70,7 @@ const EventAction = ({
 const mapStateToProps = createStructuredSelector({
   participationTokens: makeSelectParticipationTokens(),
   fetchTokenLoading: (state) => state.auth.fetchedToken.loading,
-  userId: compose(prop("userId"), makeSelectUser())
+  userId: compose(prop("userId"), makeSelectUser()),
 });
 
 const mapDispatchToProps = (dispatch) =>

@@ -3,13 +3,14 @@ import createSagaMiddleware from "redux-saga";
 import { clone, mergeDeepRight } from "ramda";
 import AuthReducer from "modules/Auth/redux/reducer";
 import DashboardReducer from "modules/Dashboard/redux/reducer";
-import GlobalReducer from 'modules/Global/redux/reducer'
+import GlobalReducer from "modules/Global/redux/reducer";
+import LiveEventReducer from "modules/LiveEvent/redux/reducer";
 import { loadState, saveState } from "./storage";
 import rootSaga from "./saga";
 
 const savedState = loadState() || {};
 
-const bindMiddleware = middleware => {
+const bindMiddleware = (middleware) => {
   if (process.env.NODE_ENV !== "production") {
     const { composeWithDevTools } = require("redux-devtools-extension");
     return composeWithDevTools(applyMiddleware(...middleware));
@@ -23,7 +24,8 @@ function configureStore(initialState = {}) {
     combineReducers({
       auth: AuthReducer,
       dashboard: DashboardReducer,
-      global: GlobalReducer
+      global: GlobalReducer,
+      liveEvent: LiveEventReducer,
     }),
     mergeDeepRight(initialState, savedState),
     bindMiddleware([sagaMiddleware])
@@ -39,8 +41,8 @@ function configureStore(initialState = {}) {
         data: {
           token: state.auth.data.token,
           user: state.auth.data.user,
-          participationTokens: state.auth.data.participationTokens
-        }
+          participationTokens: state.auth.data.participationTokens,
+        },
       },
     });
   });
