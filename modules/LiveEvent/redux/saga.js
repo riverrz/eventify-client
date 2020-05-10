@@ -32,7 +32,7 @@ let socket;
 function buildSocketConnectionString(namespace) {
   let connectionString = config.socketServerUrl;
   if (namespace) {
-    connectionString += `/U-N3wjBAj9`;
+    connectionString += `/${namespace}`;
   }
   return connectionString;
 }
