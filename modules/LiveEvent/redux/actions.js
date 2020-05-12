@@ -14,6 +14,13 @@ export function endEvent(payload) {
   };
 }
 
+export function abandonEvent(payload) {
+  return {
+    type: actionTypes.ABANDON_EVENT,
+    payload,
+  };
+}
+
 export function socketConnected(payload) {
   return {
     type: actionTypes.SOCKET_CONNECTED,

@@ -1,6 +1,13 @@
+import { useEffect } from "react";
+
 import ContentfulEngine from "./ContentfulEngine";
 
-function EventEngine({ event, endEvent, blob }) {
+function EventEngine({ event, endEvent, blob, abandonEvent }) {
+  useEffect(() => {
+    return () => {
+      abandonEvent();
+    };
+  }, []);
   const { type } = event;
   if (type === "Contentful") {
     return (

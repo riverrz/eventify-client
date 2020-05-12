@@ -34,7 +34,12 @@ import { makeSelectNamespace } from "./selectors";
 import config from "config/env";
 import request from "lib/request";
 
-let socket;
+let SOCKET;
+
+function disconnectAndResetSocket() {
+  SOCKET.disconnect(true);
+  SOCKET = null;
+}
 
 function buildSocketConnectionString(namespace) {
   let connectionString = config.socketServerUrl;
@@ -47,14 +52,14 @@ function buildSocketConnectionString(namespace) {
 function* connect(namespace, authToken) {
   const conn = buildSocketConnectionString(namespace);
 
-  if (!socket) {
-    socket = io(conn);
+  if (!SOCKET) {
+    SOCKET = io(conn);
   }
   return new Promise((resolve) => {
-    socket.on("connect", () => {
-      socket.emit("join-event", { token: authToken });
-      socket.on("join-event-successful", () => {
-        resolve(socket);
+    SOCKET.on("connect", () => {
+      SOCKET.emit("join-event", { token: authToken });
+      SOCKET.on("join-event-successful", () => {
+        resolve(SOCKET);
       });
     });
   });
@@ -62,26 +67,26 @@ function* connect(namespace, authToken) {
 
 function disconnect() {
   return new Promise((resolve) => {
-    socket.on("disconnect", () => {
-      resolve(socket);
+    SOCKET.on("disconnect", () => {
+      resolve(SOCKET);
     });
   });
 }
 
 function reconnect() {
   return new Promise((resolve) => {
-    socket.on("reconnect", () => {
-      resolve(socket);
+    SOCKET.on("reconnect", () => {
+      resolve(SOCKET);
     });
   });
 }
 
 const createSocketChannel = () =>
   eventChannel((emit) => {
-    socket.on(TIMER_SYNC, (data) => eventHandlers.handleTimerSync(emit, data));
-    socket.on(TIMER_OVER, () => eventHandlers.handleTimerOver(emit));
+    SOCKET.on(TIMER_SYNC, (data) => eventHandlers.handleTimerSync(emit, data));
+    SOCKET.on(TIMER_OVER, () => eventHandlers.handleTimerOver(emit));
     return () => {
-      socket.off(TIMER_SYNC, handleTimerSync);
+      SOCKET.off(TIMER_SYNC, handleTimerSync);
     };
   });
 
@@ -93,8 +98,6 @@ function* listenEventChannel() {
       payload: take(socketChannel),
       // cancel: cancelled(),
     });
-
-    console.log(payload);
 
     if (payload === TIMER_OVER || cancel) {
       console.log(payload);
@@ -122,9 +125,9 @@ function* listenReConnectSaga() {
 function initEvent(eventType, authToken) {
   switch (eventType) {
     case "Contentful": {
-      socket.emit("fetch-content", { token: authToken });
+      SOCKET.emit("fetch-content", { token: authToken });
       return new Promise((resolve) => {
-        socket.on("populated-content", (data) => {
+        SOCKET.on("populated-content", (data) => {
           // data is the contentful event data structure
           return resolve(data);
         });
@@ -135,8 +138,8 @@ function initEvent(eventType, authToken) {
 
 function initialiseTimer(authToken) {
   return new Promise((resolve) => {
-    socket.emit("initialise-timer", { token: authToken });
-    socket.on("timer-initialised", () => {
+    SOCKET.emit("initialise-timer", { token: authToken });
+    SOCKET.on("timer-initialised", () => {
       resolve();
     });
   });
@@ -154,7 +157,7 @@ function* liveEventFlow() {
 
       const namespace = yield select(makeSelectNamespace());
 
-      const { timeout, socket } = yield race({
+      const { timeout } = yield race({
         timeout: delay(7000),
         socket: call(connect, namespace, authToken),
       });
@@ -180,7 +183,7 @@ function* liveEventFlow() {
         abandon: take(ABANDON_EVENT),
       });
 
-      socket.disconnect(true);
+      disconnectAndResetSocket();
     } catch (error) {
       cogoToast.error(error.message);
       console.log("Failed to start the event");
@@ -207,4 +210,7 @@ function* endEventSaga({ payload }) {
   }
 }
 
-export default [liveEventFlow(), takeLatest(END_EVENT, endEventSaga)];
+export default [
+  liveEventFlow(),
+  takeLatest(END_EVENT, endEventSaga),
+];

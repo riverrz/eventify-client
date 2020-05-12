@@ -9,7 +9,14 @@ import { makeSelectDataBlob } from "modules/LiveEvent/redux/selectors";
 import Instructions from "./Instructions";
 import EventEngine from "./EventEngine";
 
-function LiveEvent({ className, event, startEvent, endEvent, blob }) {
+function LiveEvent({
+  className,
+  event,
+  startEvent,
+  endEvent,
+  blob,
+  abandonEvent,
+}) {
   const [start, setStart] = useState(event.type !== "Contentful");
   useEffect(() => {
     if (start) {
@@ -19,7 +26,14 @@ function LiveEvent({ className, event, startEvent, endEvent, blob }) {
   if (!start) {
     return <Instructions event={event} startHandler={() => setStart(true)} />;
   }
-  return <EventEngine event={event} endEvent={endEvent} blob={blob} />;
+  return (
+    <EventEngine
+      event={event}
+      endEvent={endEvent}
+      abandonEvent={abandonEvent}
+      blob={blob}
+    />
+  );
 }
 
 const StyledLiveEvent = styled(LiveEvent)``;
@@ -29,6 +43,9 @@ const mapStateToProps = createStructuredSelector({
 });
 
 const mapDispatchToProps = (dispatch) =>
-  bindActionCreators(pick(["startEvent", "endEvent"], actions), dispatch);
+  bindActionCreators(
+    pick(["startEvent", "endEvent", "abandonEvent"], actions),
+    dispatch
+  );
 
 export default connect(mapStateToProps, mapDispatchToProps)(StyledLiveEvent);
