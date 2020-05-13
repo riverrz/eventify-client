@@ -4,7 +4,6 @@ import {
   take,
   call,
   put,
-  cancelled,
   race,
   fork,
   delay,
@@ -19,10 +18,10 @@ import {
   TIMER_SYNC,
   TIMER_OVER,
   ABANDON_EVENT,
+  SOCKET_DISCONNECTED,
 } from "./constants";
 import * as eventHandlers from "modules/LiveEvent/EventHandlers";
 import {
-  endEvent,
   socketConnected,
   socketDisconnected,
   timerSync,
@@ -48,7 +47,7 @@ function buildSocketConnectionString(namespace) {
   return connectionString;
 }
 
-function* connect(namespace, authToken) {
+function connect(namespace, authToken) {
   const conn = buildSocketConnectionString(namespace);
   SOCKET = io(conn);
   return new Promise((resolve) => {
@@ -82,7 +81,7 @@ const createSocketChannel = () =>
     SOCKET.on(TIMER_SYNC, (data) => eventHandlers.handleTimerSync(emit, data));
     SOCKET.on(TIMER_OVER, () => eventHandlers.handleTimerOver(emit, END));
     return () => {
-      console.log("call back socket channel")
+      console.log("call back socket channel");
       // SOCKET.off(TIMER_SYNC, handleTimerSync);
     };
   });
@@ -155,7 +154,7 @@ function* liveEventFlow() {
         timeout: delay(7000),
         socket: call(connect, namespace, authToken),
       });
-
+      
       if (timeout) {
         // couldn't authorise
         // yield put(socketDisconnected());
@@ -171,13 +170,16 @@ function* liveEventFlow() {
         yield put(contentfulEventData(data));
       }
 
-      yield race({
+      const { disconnected } = yield race({
         task: call(listenEventChannel),
         end: take(END_EVENT),
         abandon: take(ABANDON_EVENT),
+        disconnected: take(SOCKET_DISCONNECTED),
       });
 
-      disconnectSocket();
+      if(!disconnected) {
+        disconnectSocket();
+      }
     } catch (error) {
       cogoToast.error(error.message);
       console.log("Failed to start the event");
