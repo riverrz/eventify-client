@@ -11,7 +11,7 @@ import {
   select,
   takeLatest,
 } from "redux-saga/effects";
-import { eventChannel } from "redux-saga";
+import { eventChannel, END } from "redux-saga";
 
 import {
   START_EVENT,
@@ -36,9 +36,8 @@ import request from "lib/request";
 
 let SOCKET;
 
-function disconnectAndResetSocket() {
+function disconnectSocket() {
   SOCKET.disconnect(true);
-  SOCKET = null;
 }
 
 function buildSocketConnectionString(namespace) {
@@ -51,10 +50,7 @@ function buildSocketConnectionString(namespace) {
 
 function* connect(namespace, authToken) {
   const conn = buildSocketConnectionString(namespace);
-
-  if (!SOCKET) {
-    SOCKET = io(conn);
-  }
+  SOCKET = io(conn);
   return new Promise((resolve) => {
     SOCKET.on("connect", () => {
       SOCKET.emit("join-event", { token: authToken });
@@ -84,27 +80,25 @@ function reconnect() {
 const createSocketChannel = () =>
   eventChannel((emit) => {
     SOCKET.on(TIMER_SYNC, (data) => eventHandlers.handleTimerSync(emit, data));
-    SOCKET.on(TIMER_OVER, () => eventHandlers.handleTimerOver(emit));
+    SOCKET.on(TIMER_OVER, () => eventHandlers.handleTimerOver(emit, END));
     return () => {
-      SOCKET.off(TIMER_SYNC, handleTimerSync);
+      console.log("call back socket channel")
+      // SOCKET.off(TIMER_SYNC, handleTimerSync);
     };
   });
 
 function* listenEventChannel() {
   const socketChannel = yield call(createSocketChannel);
   console.log("listenEventChannel");
-  while (true) {
-    const { payload, cancel } = yield race({
-      payload: take(socketChannel),
-      // cancel: cancelled(),
-    });
-
-    if (payload === TIMER_OVER || cancel) {
-      console.log(payload);
-      break;
-    } else {
+  try {
+    while (true) {
+      const payload = yield take(socketChannel);
       yield put(timerSync(payload));
     }
+  } catch (error) {
+    console.log(error);
+  } finally {
+    console.log("listeEventChannel finally block");
   }
 }
 
@@ -183,7 +177,7 @@ function* liveEventFlow() {
         abandon: take(ABANDON_EVENT),
       });
 
-      disconnectAndResetSocket();
+      disconnectSocket();
     } catch (error) {
       cogoToast.error(error.message);
       console.log("Failed to start the event");
@@ -210,7 +204,4 @@ function* endEventSaga({ payload }) {
   }
 }
 
-export default [
-  liveEventFlow(),
-  takeLatest(END_EVENT, endEventSaga),
-];
+export default [liveEventFlow(), takeLatest(END_EVENT, endEventSaga)];
