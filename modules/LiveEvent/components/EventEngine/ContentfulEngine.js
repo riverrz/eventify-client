@@ -1,9 +1,11 @@
+import { withRouter } from "next/router";
 import styled from "styled-components";
 import { Component } from "react";
-import { pick } from "ramda";
 import Timer from "components/Timer";
 import RenderedQuestion from "components/Question/RenderedQuestion";
-import { withRouter } from "next/router";
+import Flex from "components/Flex";
+import Button from "components/Button";
+import theme from "theme";
 
 class ContentfulEngine extends Component {
   state = {
@@ -26,44 +28,42 @@ class ContentfulEngine extends Component {
       step,
     });
   };
-  componentDidUpdate() {
-    const { totalQuestions } = this.props;
-    if (this.state.step > totalQuestions && totalQuestions > 0) {
-      this.finishHandler();
-    }
-  }
-  save = ({ values, step, type }) => {
-    let newValues;
-    if (type === "Text field") {
-      newValues = { values, type };
-    } else {
-      newValues = { ...values, type };
-    }
-    const data = { ...this.state.data, [step]: newValues };
-    this.setState({
-      data,
-    });
+  save = ({ answer, qNo }) => {
+    // answer = string[] || string
+    const data = { ...this.state.data, [qNo]: answer };
+    this.setState({ data });
   };
   render() {
-    const { className, blob, totalQuestions } = this.props;
+    const {
+      className,
+      blob,
+      totalQuestions,
+      event: { title },
+    } = this.props;
     const { step } = this.state;
     return (
       <main className={className}>
-        <div className="timer">
-          <Timer onFinish={this.finishHandler} />
+        <div className="heading-container">
+          <h2>{title}</h2>
+          <div className="timer">
+            <Timer onFinish={this.finishHandler} />
+          </div>
         </div>
         <div className="container">
           {step <= totalQuestions && (
             <RenderedQuestion
               data={blob[step]}
-              initialValues={
-                this.state.data[step] && pick(["answer"], this.state.data[step])
-              }
+              initialValues={{ answer: this.state.data[step] || [], qNo: step }}
               move={this.move}
               step={step}
               save={this.save}
-              isLastQuestion={step === totalQuestions}
             />
+          )}
+          {step > totalQuestions && (
+            <Flex justify="space-evenly">
+              <Button onClick={() => this.move(totalQuestions)}>Back</Button>
+              <Button onClick={this.finishHandler}>Submit</Button>
+            </Flex>
           )}
         </div>
       </main>
@@ -72,9 +72,21 @@ class ContentfulEngine extends Component {
 }
 
 const StyledContentfulEngine = styled(ContentfulEngine)`
-  position: relative;
   height: 100%;
-  padding-top: 2rem;
+  padding: 1rem;
+  background-color: #eee;
+  .heading-container {
+    background-color: #fff;
+    margin: 0.5rem 0;
+    padding: 0.5rem 1rem;
+    h2 {
+      color: ${theme.primaryGreen};
+      margin: 0;
+    }
+  }
+  .container {
+    position: relative;
+  }
   .timer {
     position: absolute;
     top: 0;

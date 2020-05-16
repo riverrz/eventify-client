@@ -5,6 +5,7 @@ import { Formik, Field, Form } from "formik";
 import Flex from "components/Flex";
 import Button from "components/Button";
 import Choices from "components/Choices";
+import theme from "theme";
 
 function RenderedQuestion({
   className,
@@ -14,13 +15,19 @@ function RenderedQuestion({
   save,
   initialValues,
 }) {
-  const { question, type, choices } = data;
+  const { question, type, choices, marks = 100 } = data;
 
   return (
     <div className={className}>
+      <Flex justify="space-between" className="header">
+        <h3>Question. {step}</h3>
+        <h4>
+          Maximum Marks: <span className="marks">{marks}</span>
+        </h4>
+      </Flex>
       <div
         className="question"
-        dangerouslySetInnerHTML={{ __html: `Q${step}. ${question}` }}
+        dangerouslySetInnerHTML={{ __html: question }}
       />
 
       <Formik initialValues={initialValues} enableReinitialize>
@@ -75,10 +82,21 @@ class FormOnChange extends Component {
 
 export default styled(RenderedQuestion)`
   margin: 2rem 0;
-  padding: 1rem;
-  background-color: #eee;
+
+  background-color: #fff;
+  .header {
+    border-bottom: 1px solid #ccc;
+    padding: 0.5rem 1rem;
+    h3, h4 {
+      margin: 0;
+    }
+    .marks {
+      color: ${theme.primaryGreen};
+    }
+  }
   .question {
     margin-bottom: 2rem;
+    padding: 1rem;
   }
   .actions {
     margin: 1rem 0;
