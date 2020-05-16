@@ -4,18 +4,24 @@ import {
   take,
   call,
   put,
-  cancelled,
   race,
   fork,
   delay,
   select,
   takeLatest,
 } from "redux-saga/effects";
-import { eventChannel } from "redux-saga";
+import { eventChannel, END } from "redux-saga";
 
-import { START_EVENT, END_EVENT, TIMER_SYNC, TIMER_OVER } from "./constants";
 import {
-  endEvent,
+  START_EVENT,
+  END_EVENT,
+  TIMER_SYNC,
+  TIMER_OVER,
+  ABANDON_EVENT,
+  SOCKET_DISCONNECTED,
+} from "./constants";
+import * as eventHandlers from "modules/LiveEvent/EventHandlers";
+import {
   socketConnected,
   socketDisconnected,
   timerSync,
@@ -27,116 +33,109 @@ import { makeSelectNamespace } from "./selectors";
 import config from "config/env";
 import request from "lib/request";
 
-let socket;
+let SOCKET;
+
+function disconnectSocket() {
+  SOCKET.disconnect(true);
+}
 
 function buildSocketConnectionString(namespace) {
   let connectionString = config.socketServerUrl;
   if (namespace) {
-    connectionString += `/U-N3wjBAj9`;
+    connectionString += `/${namespace}`;
   }
   return connectionString;
 }
 
-function connect(namespace) {
-  const connectionString = buildSocketConnectionString(namespace);
-  if (!socket) {
-    socket = io(connectionString);
-  }
+function connect(namespace, authToken) {
+  const conn = buildSocketConnectionString(namespace);
+  SOCKET = io(conn);
   return new Promise((resolve) => {
-    socket.on("connect", () => {
-      resolve(socket);
+    SOCKET.on("connect", () => {
+      SOCKET.emit("join-event", { token: authToken });
+      SOCKET.on("join-event-successful", () => {
+        resolve(SOCKET);
+      });
     });
   });
 }
 
-function disconnect(namespace) {
-  const connectionString = buildSocketConnectionString(namespace);
-  if (!socket) {
-    socket = io(connectionString);
-  }
+function disconnect() {
   return new Promise((resolve) => {
-    socket.on("disconnect", () => {
-      resolve(socket);
+    SOCKET.on("disconnect", () => {
+      resolve(SOCKET);
     });
   });
 }
 
-function reconnect(namespace) {
-  const connectionString = buildSocketConnectionString(namespace);
-  if (!socket) {
-    socket = io(connectionString);
-  }
+function reconnect() {
   return new Promise((resolve) => {
-    socket.on("reconnect", () => {
-      resolve(socket);
+    SOCKET.on("reconnect", () => {
+      resolve(SOCKET);
     });
   });
 }
 
-function* listenDisconnectSaga() {
-  const namespace = yield select(makeSelectNamespace());
-  while (true) {
-    yield call(disconnect, namespace);
-    yield put(socketDisconnected());
-  }
-}
-
-function* listenConnectSaga() {
-  const namespace = yield select(makeSelectNamespace());
-  while (true) {
-    yield call(reconnect, namespace);
-    yield put(socketConnected());
-  }
-}
-
-const createSocketChannel = (socket) =>
+const createSocketChannel = () =>
   eventChannel((emit) => {
-    const handleTimerSync = (data) => {
-      emit(data);
-    };
-    const handleTimerOver = () => {
-      emit(TIMER_OVER);
-    };
-    socket.on(TIMER_SYNC, handleTimerSync);
-    socket.on(TIMER_OVER, handleTimerOver);
+    SOCKET.on(TIMER_SYNC, (data) => eventHandlers.handleTimerSync(emit, data));
+    SOCKET.on(TIMER_OVER, () => eventHandlers.handleTimerOver(emit, END));
     return () => {
-      socket.off(TIMER_SYNC, handleTimerSync);
+      console.log("call back socket channel");
+      // SOCKET.off(TIMER_SYNC, handleTimerSync);
     };
   });
 
-function* listenServerSaga() {
+function* listenEventChannel() {
+  const socketChannel = yield call(createSocketChannel);
+  console.log("listenEventChannel");
   try {
-    const namespace = yield select(makeSelectNamespace());
-    const { timeout, socket } = yield race({
-      socket: call(connect, namespace),
-      timeout: delay(2000),
-    });
-    if (timeout) {
-      console.log("Timeout");
-      yield put(socketDisconnected());
-    }
-    const socketChannel = yield call(createSocketChannel, socket);
-    yield fork(listenConnectSaga);
-    yield fork(listenDisconnectSaga);
-    yield put(socketConnected());
     while (true) {
       const payload = yield take(socketChannel);
-      if (payload === TIMER_OVER) {
-        console.log(payload);
-        break;
-      } else {
-        yield put(timerSync(payload));
-      }
+      yield put(timerSync(payload));
     }
   } catch (error) {
     console.log(error);
   } finally {
-    console.log("Finally");
-    if (yield cancelled()) {
-      console.log("Closed");
-      socket.disconnect(true);
+    console.log("listeEventChannel finally block");
+  }
+}
+
+function* listenDisconnectSaga() {
+  while (true) {
+    yield call(disconnect);
+    yield put(socketDisconnected());
+  }
+}
+
+function* listenReConnectSaga() {
+  while (true) {
+    yield call(reconnect);
+    yield put(socketConnected());
+  }
+}
+
+function initEvent(eventType, authToken) {
+  switch (eventType) {
+    case "Contentful": {
+      SOCKET.emit("fetch-content", { token: authToken });
+      return new Promise((resolve) => {
+        SOCKET.on("populated-content", (data) => {
+          // data is the contentful event data structure
+          return resolve(data);
+        });
+      });
     }
   }
+}
+
+function initialiseTimer(authToken) {
+  return new Promise((resolve) => {
+    SOCKET.emit("initialise-timer", { token: authToken });
+    SOCKET.on("timer-initialised", () => {
+      resolve();
+    });
+  });
 }
 
 function* liveEventFlow() {
@@ -144,24 +143,43 @@ function* liveEventFlow() {
     const {
       payload: { eventId, type },
     } = yield take(START_EVENT);
+    console.log(eventId, type);
     try {
       const requestUrl = `${config.apiUrl}/event/start/${eventId}`;
-      const data = yield call(request, requestUrl, {
-        method: "POST",
-        body: JSON.stringify({
-          timestamp: new Date(),
-        }),
+      const authToken = yield call(request, requestUrl);
+
+      const namespace = yield select(makeSelectNamespace());
+
+      const { timeout } = yield race({
+        timeout: delay(7000),
+        socket: call(connect, namespace, authToken),
       });
+      
+      if (timeout) {
+        // couldn't authorise
+        // yield put(socketDisconnected());
+        throw new Error("Not able to connect with the server");
+      }
+      yield fork(listenDisconnectSaga);
+      yield fork(listenReConnectSaga);
+      yield put(socketConnected());
+
+      const data = yield call(initEvent, type, authToken);
       if (type === "Contentful") {
-        const { content } = data;
-        // store the content in store
-        yield put(contentfulEventData(content));
+        yield call(initialiseTimer, authToken);
+        yield put(contentfulEventData(data));
       }
 
-      yield race({
-        task: call(listenServerSaga),
-        cancel: take(END_EVENT),
+      const { disconnected } = yield race({
+        task: call(listenEventChannel),
+        end: take(END_EVENT),
+        abandon: take(ABANDON_EVENT),
+        disconnected: take(SOCKET_DISCONNECTED),
       });
+
+      if(!disconnected) {
+        disconnectSocket();
+      }
     } catch (error) {
       cogoToast.error(error.message);
       console.log("Failed to start the event");
