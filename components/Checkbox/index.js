@@ -1,68 +1,29 @@
-import React from "react";
+import { Field } from "formik";
 
-const Checkbox = ({
-  field: { name, value, onChange, onBlur },
-  form: { errors, touched, setFieldValue },
-  id,
-  label,
-  className,
-  ...props
-}) => {
+export default function Checkbox(props) {
   return (
-    <div>
-      <input
-        name={name}
-        id={id}
-        type="checkbox"
-        value={label}
-        checked={value}
-        onChange={onChange}
-        onBlur={onBlur}
-        className="checkbox"
-      />
-      <label htmlFor={id}>{label}</label>
-    </div>
+    <Field name={props.name}>
+      {({ field, form }) => (
+        <label>
+          <input
+            type="checkbox"
+            {...props}
+            checked={field.value.includes(props.value)}
+            onChange={() => {
+              if (field.value.includes(props.value)) {
+                const nextValue = field.value.filter(
+                  (value) => value !== props.value
+                );
+                form.setFieldValue(props.name, nextValue);
+              } else {
+                const nextValue = field.value.concat(props.value);
+                form.setFieldValue(props.name, nextValue);
+              }
+            }}
+          />
+          {props.value}
+        </label>
+      )}
+    </Field>
   );
-};
-
-class CheckboxGroup extends React.Component {
-  constructor(props) {
-    super(props);
-  }
-
-  handleChange = (event) => {
-    const target = event.currentTarget;
-    let valueArray = this.props.value || [];
-  
-    if (target.checked) {
-      valueArray.push(target.value);
-    } else {
-      valueArray.splice(valueArray.indexOf(target.value), 1);
-    }
-
-    this.props.onChange(this.props.id, valueArray);
-  };
-
-  render() {
-    const { value, className, children } = this.props;
-
-    const classes = `input-field ${className}`;
-
-    return (
-      <div className={classes}>
-        <fieldset>
-          {React.Children.map(children, (child) => {
-            return React.cloneElement(child, {
-              field: {
-                value: value.includes(child.props.label),
-                onChange: this.handleChange,
-              },
-            });
-          })}
-        </fieldset>
-      </div>
-    );
-  }
 }
-
-export { Checkbox, CheckboxGroup };
