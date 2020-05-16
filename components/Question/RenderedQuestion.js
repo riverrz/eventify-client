@@ -1,8 +1,10 @@
+import { Component } from "react";
+import { equals } from "ramda";
 import styled from "styled-components";
-import { Formik, Field } from "formik";
+import { Formik, Field, Form } from "formik";
 import Flex from "components/Flex";
 import Button from "components/Button";
-import { Checkbox, CheckboxGroup } from "components/Checkbox";
+import Choices from "components/Choices";
 
 function RenderedQuestion({
   className,
@@ -10,8 +12,7 @@ function RenderedQuestion({
   step,
   move,
   save,
-  initialValues = {},
-  isLastQuestion,
+  initialValues,
 }) {
   const { question, type, choices } = data;
 
@@ -21,20 +22,25 @@ function RenderedQuestion({
         className="question"
         dangerouslySetInnerHTML={{ __html: `Q${step}. ${question}` }}
       />
-      <Formik
-        initialValues={initialValues}
-        onSubmit={(values) => {
-          save({ type, step, values });
-        }}
-        enableReinitialize
-      >
+
+      <Formik initialValues={initialValues} enableReinitialize>
         {(formikProps) => (
-          <form onSubmit={formikProps.handleSubmit} className="form">
-            <Choices type={type} choices={choices} formikProps={formikProps} />
-            <Button type="submit">Save</Button>
-          </form>
+          <Form>
+            {type === "Text field" ? (
+              <Field
+                type="text"
+                name="answer"
+                required
+                placeholder="Enter your answer here"
+              />
+            ) : (
+              <Choices type={type} choices={choices} />
+            )}
+            <FormOnChange values={formikProps.values} save={save} />
+          </Form>
         )}
       </Formik>
+
       <Flex justify="space-around" className="actions">
         {step > 1 && <Button onClick={() => move(step - 1)}>Back</Button>}
         <Button
@@ -42,37 +48,28 @@ function RenderedQuestion({
             move(step + 1);
           }}
         >
-          {isLastQuestion ? "Submit" : "Next"}
+          Next
         </Button>
       </Flex>
     </div>
   );
 }
 
-function Choices({ type, choices, formikProps }) {
-  switch (type) {
-    case "Text field": {
-      return <Field name="answer" required placeholer="Enter your answer" />;
+class FormOnChange extends Component {
+  shouldComponentUpdate(nextProps) {
+    if (equals(nextProps.values, this.props.values)) {
+      return false;
     }
-    default: {
-      const { values, setFieldValue } = formikProps;
-      return (
-        <CheckboxGroup
-          id="answer"
-          value={values.answer || []}
-          onChange={setFieldValue}
-        >
-          {choices.map((choice, i) => (
-            <Field
-              component={Checkbox}
-              name="answer"
-              id={`checkbox${i + 1}`}
-              label={choice}
-            />
-          ))}
-        </CheckboxGroup>
-      );
+    return true;
+  }
+  componentDidUpdate() {
+    const { values, save } = this.props;
+    if (values) {
+      save(values);
     }
+  }
+  render() {
+    return null;
   }
 }
 
