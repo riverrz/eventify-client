@@ -60,10 +60,15 @@ class ContentfulEngine extends Component {
             />
           )}
           {step > totalQuestions && (
-            <Flex justify="space-evenly">
-              <Button onClick={() => this.move(totalQuestions)}>Back</Button>
-              <Button onClick={this.finishHandler}>Submit</Button>
-            </Flex>
+            <div>
+              <h3 style={{ textAlign: "center" }}>
+                You have answer all the questions! Would you like to submit?
+              </h3>
+              <Flex justify="space-evenly">
+                <Button onClick={() => this.move(totalQuestions)}>Back</Button>
+                <Button onClick={this.finishHandler}>Submit</Button>
+              </Flex>
+            </div>
           )}
         </div>
       </main>
