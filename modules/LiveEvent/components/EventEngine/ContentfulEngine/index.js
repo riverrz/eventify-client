@@ -6,6 +6,7 @@ import RenderedQuestion from "components/Question/RenderedQuestion";
 import Flex from "components/Flex";
 import Button from "components/Button";
 import theme from "theme";
+import QuestionNavigator from "./QuestionNavigator";
 
 class ContentfulEngine extends Component {
   state = {
@@ -49,34 +50,55 @@ class ContentfulEngine extends Component {
             <Timer onFinish={this.finishHandler} />
           </div>
         </div>
-        <div className="container">
-          {step <= totalQuestions && (
-            <RenderedQuestion
-              data={blob[step]}
-              initialValues={{ answer: this.state.data[step] || [], qNo: step }}
-              move={this.move}
-              step={step}
-              save={this.save}
-            />
-          )}
-          {step > totalQuestions && (
-            <div>
-              <h3 style={{ textAlign: "center" }}>
-                You have answer all the questions! Would you like to submit?
-              </h3>
-              <Flex justify="space-evenly">
-                <Button onClick={() => this.move(totalQuestions)}>Back</Button>
-                <Button onClick={this.finishHandler}>Submit</Button>
-              </Flex>
+        <Flex className="container" justify="space-evenly" align="flex-start">
+          <div className="first">
+            {step <= totalQuestions && (
+              <RenderedQuestion
+                data={blob[step]}
+                initialValues={{
+                  answer: this.state.data[step] || [],
+                  qNo: step,
+                }}
+                move={this.move}
+                step={step}
+                save={this.save}
+              />
+            )}
+            {step > totalQuestions && (
+              <div>
+                <h3 style={{ textAlign: "center", marginBottom: "1rem" }}>
+                  You have answer all the questions! Would you like to submit?
+                </h3>
+                <Flex justify="space-evenly">
+                  <Button onClick={() => this.move(totalQuestions)}>
+                    Back
+                  </Button>
+                  <Button onClick={this.finishHandler}>Submit</Button>
+                </Flex>
+              </div>
+            )}
+          </div>
+          <div className="second">
+            <div className="summary">
+              <h3>Summary</h3>
             </div>
-          )}
-        </div>
+            <QuestionNavigator
+              current={step}
+              savedData={this.state.data}
+              blob={blob}
+            />
+          </div>
+        </Flex>
       </main>
     );
   }
 }
 
 const StyledContentfulEngine = styled(ContentfulEngine)`
+  h2,
+  h3 {
+    margin: 0;
+  }
   height: 100%;
   padding: 1rem;
   background-color: #eee;
@@ -84,13 +106,28 @@ const StyledContentfulEngine = styled(ContentfulEngine)`
     background-color: #fff;
     margin: 0.5rem 0;
     padding: 0.5rem 1rem;
+    position: relative;
     h2 {
       color: ${theme.primaryGreen};
-      margin: 0;
     }
   }
   .container {
-    position: relative;
+    padding: 2rem 0;
+    .first {
+      flex: 3;
+      margin-right: 0.5rem;
+    }
+    .second {
+      background-color: #fff;
+      flex: 1;
+      margin-left: 0.5rem;
+    }
+
+    .summary {
+      border-bottom: 1px solid #ccc;
+      padding: 0.5rem 1rem;
+      text-align: center;
+    }
   }
   .timer {
     position: absolute;

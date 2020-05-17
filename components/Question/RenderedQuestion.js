@@ -81,8 +81,6 @@ class FormOnChange extends Component {
 }
 
 export default styled(RenderedQuestion)`
-  margin: 2rem 0;
-
   background-color: #fff;
   .header {
     border-bottom: 1px solid #ccc;
