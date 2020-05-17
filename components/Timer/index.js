@@ -25,22 +25,22 @@ class Timer extends Component {
     const { days, hours, minutes, seconds } = timeObj;
     return (
       <Flex className={className}>
-        <div className="container">
+        <div className="timer-container">
           <span className="title">Days</span>
           <div className="days">{days}</div>
         </div>
         <span className="seperator">:</span>
-        <div className="container">
+        <div className="timer-container">
           <span className="title">Hours</span>
           <div className="hours">{hours}</div>
         </div>
         <span className="seperator">:</span>
-        <div className="container">
+        <div className="timer-container">
           <span className="title">Minutes</span>
           <div className="minutes">{minutes}</div>
         </div>
         <span className="seperator">:</span>
-        <div className="container">
+        <div className="timer-container">
           <span className="title">Seconds</span>
           <div className="seconds">{seconds}</div>
         </div>
@@ -50,14 +50,14 @@ class Timer extends Component {
 }
 
 const StyledTimer = styled(Timer)`
-  .container div {
+  .timer-container div {
     border: 1px solid #eee;
     padding: 5px;
     border-radius: 2px;
     font-size: 1.3rem;
     text-align: center;
   }
-  .container .title {
+  .timer-container .title {
     font-weight: bold;
     font-size: 0.8rem;
   }

@@ -1,0 +1,17 @@
+{
+  "1": {
+    "question": "<strong><em>What is DS algo?</em></strong>",
+    "type": "Single Choice",
+    "choices": ["Maths", "Complexity", "Time"]
+  },
+  "2": {
+    "question": "<p><u>Enter your work link:</u></p><ol><li><strong>Must contain github</strong></li><li><strong>Must be code</strong></li></ol>",
+    "type": "Text field",
+    "choices": []
+  },
+  "3": {
+    "question": "<s>multi choice question:</s>",
+    "type": "Multi Choice",
+    "choices": ["Yo", "New", "Champ", "Maths"]
+  }
+}
