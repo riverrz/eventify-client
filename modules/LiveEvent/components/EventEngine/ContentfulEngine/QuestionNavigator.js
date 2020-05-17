@@ -2,6 +2,9 @@ import styled from "styled-components";
 import Flex from "components/Flex";
 
 function QuestionNavigator({ className, blob, current, savedData }) {
+  if (!blob) {
+    return null;
+  }
   const attemptedQuestions = Object.keys(savedData);
   return (
     <div className={className}>

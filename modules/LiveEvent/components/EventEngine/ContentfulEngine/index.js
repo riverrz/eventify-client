@@ -105,7 +105,7 @@ const StyledContentfulEngine = styled(ContentfulEngine)`
   .heading-container {
     background-color: #fff;
     margin: 0.5rem 0;
-    padding: 0.5rem 1rem;
+    padding: 1rem;
     position: relative;
     h2 {
       color: ${theme.primaryGreen};
