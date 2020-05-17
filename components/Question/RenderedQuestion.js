@@ -32,7 +32,7 @@ function RenderedQuestion({
 
       <Formik initialValues={initialValues} enableReinitialize>
         {(formikProps) => (
-          <Form>
+          <Form className="form">
             {type === "Text field" ? (
               <Field
                 type="text"
@@ -87,7 +87,8 @@ export default styled(RenderedQuestion)`
   .header {
     border-bottom: 1px solid #ccc;
     padding: 0.5rem 1rem;
-    h3, h4 {
+    h3,
+    h4 {
       margin: 0;
     }
     .marks {
@@ -98,7 +99,14 @@ export default styled(RenderedQuestion)`
     margin-bottom: 2rem;
     padding: 1rem;
   }
+  .form input[type=text] {
+    display: block;
+    width: 75%;
+    margin: 1rem auto;
+    font-size: inherit;
+    padding: 1rem 2rem;
+  }
   .actions {
-    margin: 1rem 0;
+    padding: 1rem 0;
   }
 `;

@@ -7,14 +7,14 @@ export default ({ type, choices = [] }) => (
     {choices.map((choice, index) => {
       if (type === "Single Choice") {
         return (
-          <div style={{ margin: "0.5rem" }}>
-            <Radio name="answer" value={choice} key={index} />
+          <div key={index} style={{ margin: "0.5rem" }}>
+            <Radio name="answer" value={choice} />
           </div>
         );
       } else {
         return (
-          <div style={{ margin: "0.5rem" }}>
-            <Checkbox name="answer" value={choice} key={index} />
+          <div key={index} style={{ margin: "0.5rem" }}>
+            <Checkbox name="answer" value={choice} />
           </div>
         );
       }
