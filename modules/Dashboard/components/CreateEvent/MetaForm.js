@@ -43,64 +43,88 @@ export default function ({ submitHandler, open, next, initialValues = {} }) {
     >
       {(props) => (
         <form onSubmit={props.handleSubmit} className="form" autoComplete="off">
-          <Field
-            name="title"
-            className="input-field"
-            placeholder="*Enter title of your event"
-            required
-          />
-          <Field
-            name="description"
-            className="input-field"
-            placeholder="*Enter description of your event"
-            required
-          />
-          <Field
-            type="number"
-            name="participationFees"
-            className="input-field"
-            placeholder="*Enter the participation fees for the event"
-            required
-          />
-          <Field
-            type="number"
-            className="input-field"
-            name="totalParticipantsAllowed"
-            placeholder="*Enter number of participants (atleast 1)"
-            required
-          />
-          <Field
-            type="datetime-local"
-            className="input-field"
-            name="startTimeStamp"
-            required
-          />
-          <Field
-            type="datetime-local"
-            className="input-field"
-            name="endTimeStamp"
-            required
-          />
-          <Field
-            name="duration"
-            type="number"
-            className="input-field"
-            placeholder="Enter duration of the event in minutes"
-          />
-          <Field name="emailArr" required>
-            {({ field, form }) => (
-              <TagsInput
-                value={field.value}
-                onlyUnique
-                validationRegex={emailRegex}
-                inputProps={{
-                  placeholder: "*Enter participants' email addresses",
-                }}
-                onValidationReject={validationErrorMessage}
-                onChange={(x) => form.setFieldValue("emailArr", x)}
-              />
-            )}
-          </Field>
+          <div className="field-container">
+            <label htmlFor="title">Enter title of your event*</label>
+            <Field id="title" name="title" className="input-field" required />
+          </div>
+          <div className="field-container">
+            <label htmlFor="description">
+              Enter description of your event*
+            </label>
+            <Field
+              id="description"
+              name="description"
+              className="input-field"
+              required
+            />
+          </div>
+          <div className="field-container">
+            <label htmlFor="participationFees">
+              Enter the participation fees for the event*
+            </label>
+            <Field
+              type="number"
+              name="participationFees"
+              className="input-field"
+              required
+            />
+          </div>
+          <div className="field-container">
+            <label htmlFor="totalParticipantsAllowed">
+              Enter number of participants (atleast 1)*
+            </label>
+            <Field
+              type="number"
+              className="input-field"
+              name="totalParticipantsAllowed"
+              required
+            />
+          </div>
+          <div className="field-container">
+            <label htmlFor="startTimeStamp">
+              Enter the start timestamp for the event*
+            </label>
+            <Field
+              type="datetime-local"
+              className="input-field"
+              name="startTimeStamp"
+              required
+            />
+          </div>
+          <div className="field-container">
+            <label htmlFor="endTimeStamp">
+              Enter the end timestamp for the event*
+            </label>
+            <Field
+              type="datetime-local"
+              className="input-field"
+              name="endTimeStamp"
+              required
+            />
+          </div>
+          <div className="field-container">
+            <label htmlFor="duration">
+              Enter duration of the event in minutes*
+            </label>
+            <Field name="duration" type="number" className="input-field" />
+          </div>
+          <div className="field-container">
+            <label htmlFor="emailArr">Enter the email of participants*</label>
+            <Field name="emailArr" required>
+              {({ field, form }) => (
+                <TagsInput
+                  value={field.value}
+                  onlyUnique
+                  validationRegex={emailRegex}
+                  inputProps={{
+                    placeholder: "Enter participants' email addresses*",
+                  }}
+                  onValidationReject={validationErrorMessage}
+                  onChange={(x) => form.setFieldValue("emailArr", x)}
+                />
+              )}
+            </Field>
+          </div>
           <Field name="banner" required>
             {({ field, form }) => (
               <Files

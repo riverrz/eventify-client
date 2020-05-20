@@ -80,9 +80,13 @@ const StyledCreateEvent = styled(CreateEvent)`
     margin: 2rem auto;
     text-align: center;
 
+    .field-container {
+      text-align: left;
+    }
+
     .input-field,
     .react-tagsinput {
-      margin: 2rem 0;
+      margin: 0.5rem 0 2rem;
       font-size: inherit;
       padding: 1rem 2rem;
       display: block;

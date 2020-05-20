@@ -17,12 +17,15 @@ const Contentful = ({ className, submitHandler, open, createEvent }) => {
           className="form"
           onSubmit={() => setNoOfQuestions(Number(inputRef.current.value))}
         >
-          <input
-            ref={inputRef}
-            type="text"
-            name="noOfQuestions"
-            placeholder="Enter number of questions"
-          />
+          <div className="field-container">
+            <label htmlFor="noOfQuestions">Enter number of questions</label>
+            <input
+              ref={inputRef}
+              type="text"
+              name="noOfQuestions"
+              className="input-field"
+            />
+          </div>
           <Button type="submit">Submit</Button>
         </form>
       )}
@@ -54,14 +57,7 @@ const Contentful = ({ className, submitHandler, open, createEvent }) => {
 };
 
 export default styled(Contentful)`
-  text-align: middle;
-  .form input {
-    display: block;
-    width: 75%;
-    margin: auto;
-    font-size: inherit;
-    padding: 1rem 2rem;
-  }
+  text-align: center;
   button {
     margin: 2rem 0;
   }
