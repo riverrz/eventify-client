@@ -9,11 +9,13 @@ import {
   makeSelectLoggedIn,
   makeSelectBalance,
   makeSelectAuthLoading,
+  makeSelectUser,
 } from "modules/Auth/redux/selectors";
 import * as actions from "modules/Auth/redux/actions";
 import * as globalActions from "modules/Global/redux/actions";
 import AddMoney from "components/AddMoney";
 import Spinner from "components/Spinner";
+import Flex from "components/Flex";
 
 const Navbar = ({
   className,
@@ -22,6 +24,7 @@ const Navbar = ({
   balance,
   openModal,
   authLoading,
+  user: { username },
 }) => {
   const addMoney = useCallback(
     () =>
@@ -62,22 +65,25 @@ const Navbar = ({
           </Fragment>
         )}
       </ul>
-      <div onClick={addMoney} style={{ cursor: "pointer" }}>
-        {isLoggedIn && (
-          <h4 className="balance">
-            Balance:{" "}
-            {authLoading ? (
-              <Spinner
-                style={{ dispatch: "inline-block" }}
-                height={20}
-                width={20}
-              />
-            ) : (
-              `${balance} Coins`
-            )}
-          </h4>
-        )}
-      </div>
+      {isLoggedIn && (
+        <Flex>
+          <h4>Username: {username}</h4>
+          <div onClick={addMoney} style={{ cursor: "pointer" }}>
+            <h4 className="balance">
+              Balance:{" "}
+              {authLoading ? (
+                <Spinner
+                  style={{ dispatch: "inline-block" }}
+                  height={20}
+                  width={20}
+                />
+              ) : (
+                `${balance} Coins`
+              )}
+            </h4>
+          </div>
+        </Flex>
+      )}
     </Nav>
   );
 };
@@ -115,7 +121,7 @@ const StyledNavbar = styled(Navbar)`
     padding-left: 10%;
   }
   .balance {
-    margin-left: auto;
+    margin-left: 1rem;
   }
   a {
     text-decoration: none;
@@ -139,6 +145,7 @@ const mapStateToProps = createStructuredSelector({
   isLoggedIn: makeSelectLoggedIn(),
   balance: makeSelectBalance(),
   authLoading: makeSelectAuthLoading(),
+  user: makeSelectUser(),
 });
 
 const mapDispatchToProps = (dispatch) =>
