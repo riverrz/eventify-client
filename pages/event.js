@@ -15,18 +15,11 @@ DashboardPage.getInitialProps = async ({ ctx: { query } }) => {
     const event = await fetch(`${config.apiUrl}/event/${eventId}`).then((res) =>
       res.json()
     );
-    return { event: evolveEvent(event) };
+    return { event };
   } catch (error) {
     console.log(error);
   }
 };
-
-const transformations = {
-  startTimeStamp: (date) => new Date(date).toLocaleString(),
-  endTimeStamp: (date) => new Date(date).toLocaleString(),
-};
-
-const evolveEvent = evolve(transformations);
 
 const mapStateToProps = createStructuredSelector({
   isLoggedIn: makeSelectLoggedIn(),

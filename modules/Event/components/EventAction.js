@@ -15,7 +15,7 @@ import * as eventActions from "modules/Event/redux/actions";
 import theme from "theme";
 
 const EventAction = ({
-  event: { eventId, title, participants },
+  event: { eventId, title, participants, startTimeStamp },
   participationTokens,
   fetchParticipationTokenRequest,
   pariticipateRequest,
@@ -58,10 +58,12 @@ const EventAction = ({
           Participate
         </Button>
       )}
-      {hasParticipated && (
+      {hasParticipated && new Date(startTimeStamp) <= new Date() ? (
         <Link href={`/live/${eventId}`}>
           <Button>Start</Button>
         </Link>
+      ) : (
+        <p>Please wait for the event to start...</p>
       )}
     </>
   );

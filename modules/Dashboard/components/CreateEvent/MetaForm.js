@@ -18,6 +18,7 @@ const defaultInitialValues = {
   emailArr: [],
   banner: {},
   duration: "",
+  participationFees: "",
 };
 
 export default function ({ submitHandler, open, next, initialValues = {} }) {
@@ -41,7 +42,7 @@ export default function ({ submitHandler, open, next, initialValues = {} }) {
       }}
     >
       {(props) => (
-        <form onSubmit={props.handleSubmit} className="form">
+        <form onSubmit={props.handleSubmit} className="form" autoComplete="off">
           <Field
             name="title"
             className="input-field"
@@ -52,6 +53,13 @@ export default function ({ submitHandler, open, next, initialValues = {} }) {
             name="description"
             className="input-field"
             placeholder="*Enter description of your event"
+            required
+          />
+          <Field
+            type="number"
+            name="participationFees"
+            className="input-field"
+            placeholder="*Enter the participation fees for the event"
             required
           />
           <Field

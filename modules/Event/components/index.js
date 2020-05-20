@@ -16,6 +16,7 @@ const Event = ({ className, data, isLoggedIn }) => {
     banner,
     startTimeStamp,
     endTimeStamp,
+    participationFees,
     creator: { username, email },
   } = data;
   return (
@@ -32,8 +33,11 @@ const Event = ({ className, data, isLoggedIn }) => {
           <p>{description}</p>
         </section>
         <section className="meta">
-          <p className="start-date">Starts at: {startTimeStamp}</p>
-          <p className="end-date">Ends at: {endTimeStamp}</p>
+          <p className="participationFees">
+            Participation Fees: <span>{participationFees} Coins</span>
+          </p>
+          <p className="start-date">Starts at: {new Date(startTimeStamp).toLocaleString()}</p>
+          <p className="end-date">Ends at: {new Date(endTimeStamp).toLocaleString()}</p>
           <p className="creator">
             Creator: {username}
             <a href={`mailto:${email}`}>
@@ -68,6 +72,10 @@ export default styled(Event)`
   .meta {
     border-top: 1px solid #222;
     padding-top: 2rem;
+  }
+  .participationFees span{
+    background-color: yellow;
+    padding: 5px;
   }
   @media only screen and (min-width: 768px) {
     .meta {
