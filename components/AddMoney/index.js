@@ -34,6 +34,7 @@ function AddMoney({ className, walletUpdateRequest, loading }) {
           </div>
         ))}
       </Grid>
+      <p>Note*: Value of 1 Coin is equal to 1Rs. </p>
       {!loading && (
         <Button onClick={() => topUp && walletUpdateRequest({ amt: topUp })}>
           Proceed

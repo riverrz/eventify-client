@@ -33,7 +33,12 @@ const Wrapper = styled.div`
     text-align: center;
   }
   .modal {
-    position: relative;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    min-width: 350px;
+    width: 50vw;
     background-color: #fff;
 
     .close {
