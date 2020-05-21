@@ -1,4 +1,4 @@
-import { takeEvery, call } from "redux-saga/effects";
+import { takeEvery, call, put } from "redux-saga/effects";
 import cogoToast from "cogo-toast";
 import * as actionTypes from "./constants";
 import { fetchUserRequest } from "modules/Auth/redux/actions";
