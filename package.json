@@ -29,7 +29,7 @@
     "isomorphic-unfetch": "^3.0.0",
     "jodit-react": "^1.0.42",
     "lodash.debounce": "^4.0.8",
-    "nanoid": "^3.0.2",
+    "nanoid": "^3.1.31",
     "next": "^9.2.1",
     "next-redux-saga": "^4.1.2",
     "next-redux-wrapper": "^5.0.0",
